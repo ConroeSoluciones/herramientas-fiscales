@@ -22,7 +22,7 @@ const themes = [
         :aria-label="`Tema ${theme.label.toLowerCase()}`"
         :aria-pressed="colorMode.preference === theme.value"
         :title="theme.label"
-        class="hover:text-brand-800 focus-visible:outline-brand-700 dark:hover:text-brand-200 dark:focus-visible:outline-brand-300 grid size-9 cursor-pointer place-items-center rounded-lg text-lg text-slate-600 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:text-slate-300"
+        class="hover:text-brand-800 focus-visible:outline-brand-700 dark:hover:text-brand-200 dark:focus-visible:outline-brand-300 grid size-8 cursor-pointer place-items-center rounded-lg text-base text-slate-600 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:text-slate-300"
         :class="
           colorMode.preference === theme.value
             ? 'text-brand-900 dark:text-brand-200 bg-white shadow-sm dark:bg-slate-800'

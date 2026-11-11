@@ -128,7 +128,7 @@ const formattedPublicationDate = computed(() => {
 
     <section
       aria-label="Herramientas disponibles"
-      class="mx-auto grid max-w-5xl gap-5 md:grid-cols-2"
+      class="mx-auto grid max-w-6xl gap-5 md:grid-cols-2 xl:grid-cols-3"
     >
       <NuxtLink
         to="/tipo-de-cambio-dolar-mxn"
@@ -138,7 +138,7 @@ const formattedPublicationDate = computed(() => {
           aria-hidden="true"
           class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 grid size-14 place-items-center rounded-2xl text-2xl font-semibold"
         >
-          $¥
+          $
         </span>
         <span
           class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 mt-5 rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
@@ -160,6 +160,39 @@ const formattedPublicationDate = computed(() => {
           class="text-brand-800 dark:text-brand-300 mt-6 text-sm font-semibold"
         >
           Ver tipo de cambio <span aria-hidden="true">»</span>
+        </span>
+      </NuxtLink>
+
+      <NuxtLink
+        to="/calculadora-antiguedad-laboral"
+        class="group hover:border-brand-300 focus-visible:outline-brand-700 dark:hover:border-brand-700 dark:focus-visible:outline-brand-300 flex min-h-72 flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-slate-800 dark:bg-slate-900"
+      >
+        <span
+          aria-hidden="true"
+          class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 grid size-14 place-items-center rounded-2xl text-2xl font-semibold"
+        >
+          ◷
+        </span>
+        <span
+          class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 mt-5 rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
+        >
+          NÓMINA · LFT
+        </span>
+        <h2
+          class="group-hover:text-brand-900 dark:group-hover:text-brand-200 mt-5 text-xl font-semibold tracking-tight text-slate-950 dark:text-white"
+        >
+          Calculadora de antigüedad laboral
+        </h2>
+        <p
+          class="mt-4 flex-1 text-base leading-7 text-slate-500 dark:text-slate-300"
+        >
+          Calcula el tiempo laborado y obtén el formato de antigüedad para el
+          CFDI de nómina.
+        </p>
+        <span
+          class="text-brand-800 dark:text-brand-300 mt-6 text-sm font-semibold"
+        >
+          Calcular antigüedad <span aria-hidden="true">»</span>
         </span>
       </NuxtLink>
 

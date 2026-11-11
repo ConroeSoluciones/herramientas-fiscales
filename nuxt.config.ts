@@ -66,6 +66,10 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
+  build: {
+    transpile: ['@vuepic/vue-datepicker'],
+  },
+
   typescript: {
     strict: true,
     typeCheck: true,

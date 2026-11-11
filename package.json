@@ -28,11 +28,13 @@
   },
   "dependencies": {
     "@cs-herramientas/sat-error-catalogs": "workspace:*",
-    "@cs-herramientas/sidof-ingestion": "workspace:*"
+    "@cs-herramientas/sidof-ingestion": "workspace:*",
+    "@vuepic/vue-datepicker": "^14.0.0",
+    "date-fns": "^4.4.0"
   },
   "devDependencies": {
-    "@nuxtjs/color-mode": "~4.1.0",
     "@nuxt/eslint": "~1.17.0",
+    "@nuxtjs/color-mode": "~4.1.0",
     "@nuxtjs/robots": "~7.0.2",
     "@nuxtjs/sitemap": "~9.1.0",
     "@tailwindcss/vite": "~4.3.5",

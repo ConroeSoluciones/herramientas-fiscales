@@ -4,6 +4,7 @@ const marketingUrl = useMarketingUrl('header_conoce_csfacturacion')
 const navigation = [
   { label: 'Inicio', to: '/' },
   { label: 'Tipo de cambio', to: '/tipo-de-cambio-dolar-mxn' },
+  { label: 'Antigüedad laboral', to: '/calculadora-antiguedad-laboral' },
   { label: 'Códigos de error SAT', to: '/errores' },
 ]
 </script>
@@ -13,7 +14,7 @@ const navigation = [
     class="border-b border-slate-200 bg-slate-50/90 dark:border-slate-800 dark:bg-slate-950"
   >
     <div
-      class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8"
+      class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8"
     >
       <NuxtLink
         to="/"
@@ -24,14 +25,14 @@ const navigation = [
         <img
           src="/csfacturacion-logo.svg"
           alt="CSFacturación"
-          class="h-8 w-auto sm:h-9"
+          class="h-7 w-auto sm:h-8"
         />
         <!-- eslint-enable vue/html-self-closing -->
       </NuxtLink>
 
       <nav aria-label="Navegación principal">
         <ul
-          class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium sm:text-base"
+          class="flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium sm:gap-x-4 sm:text-sm"
         >
           <li v-for="item in navigation" :key="item.to">
             <NuxtLink

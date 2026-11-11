@@ -43,3 +43,50 @@ h5,
 h6 {
   font-family: var(--font-heading);
 }
+
+.cs-date-picker {
+  --dp-font-family: var(--font-sans);
+  --dp-font-size: 0.875rem;
+  --dp-border-radius: 0.75rem;
+  --dp-cell-border-radius: 0.5rem;
+  --dp-cell-size: 2.25rem;
+  --dp-input-padding: 0.75rem 2.75rem 0.75rem 0.75rem;
+  --dp-input-icon-padding: 2.5rem;
+  --dp-menu-min-width: 17rem;
+  --dp-menu-padding: 0.5rem;
+  --dp-common-transition: all 0.15s ease;
+}
+
+.cs-date-picker.dp__theme_light {
+  --dp-background-color: #fff;
+  --dp-text-color: #0f172a;
+  --dp-hover-color: #f1f5f9;
+  --dp-hover-text-color: #0f172a;
+  --dp-border-color: #cbd5e1;
+  --dp-border-color-hover: #00a5d5;
+  --dp-border-color-focus: #0187d2;
+  --dp-menu-border-color: #e2e8f0;
+  --dp-primary-color: #1a2c5b;
+  --dp-primary-text-color: #fff;
+  --dp-icon-color: #64748b;
+  --dp-disabled-color: #f1f5f9;
+  --dp-disabled-color-text: #94a3b8;
+  --dp-highlight-color: rgb(0 165 213 / 12%);
+}
+
+.cs-date-picker.dp__theme_dark {
+  --dp-background-color: #0f172a;
+  --dp-text-color: #f8fafc;
+  --dp-hover-color: #1e293b;
+  --dp-hover-text-color: #f8fafc;
+  --dp-border-color: #334155;
+  --dp-border-color-hover: #00a5d5;
+  --dp-border-color-focus: #55c2e6;
+  --dp-menu-border-color: #334155;
+  --dp-primary-color: #0187d2;
+  --dp-primary-text-color: #fff;
+  --dp-icon-color: #cbd5e1;
+  --dp-disabled-color: #1e293b;
+  --dp-disabled-color-text: #64748b;
+  --dp-highlight-color: rgb(0 165 213 / 18%);
+}
