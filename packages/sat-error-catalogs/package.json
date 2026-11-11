@@ -19,7 +19,7 @@
     "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true })\"",
     "clean:test": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('dist/test', { recursive: true, force: true })\"",
     "build": "tsc -p tsconfig.json",
-    "sync": "pnpm run build && node --env-file=../../.env dist/cli.js sync",
+    "sync": "pnpm run build && node dist/cli.js sync",
     "test": "pnpm run clean:test && pnpm run build && node --test dist/test/*.test.js"
   },
   "dependencies": {

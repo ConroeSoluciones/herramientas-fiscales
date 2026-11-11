@@ -1,9 +1,13 @@
+import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readCatalogConfig } from './config.js'
 import { downloadCatalogs } from './downloader.js'
 import { MysqlCatalogRepository } from './mysql-repository.js'
 import { createMysqlPoolFromEnvironment } from './mysql-pool.js'
+
+const rootEnvironmentFile = resolve(process.cwd(), '../../.env')
+if (existsSync(rootEnvironmentFile)) process.loadEnvFile(rootEnvironmentFile)
 
 const DEFAULT_CONFIG = fileURLToPath(
   new URL('../../../config/sat-error-catalogs.json', import.meta.url),

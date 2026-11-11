@@ -2,7 +2,7 @@ import { createPool, type Pool } from 'mysql2/promise'
 
 function requiredEnvironmentVariable(name: string): string {
   const value = process.env[name]?.trim()
-  if (!value) throw new Error(`Falta configurar ${name} en el archivo .env.`)
+  if (!value) throw new Error(`Falta configurar la variable ${name}.`)
   return value
 }
 
