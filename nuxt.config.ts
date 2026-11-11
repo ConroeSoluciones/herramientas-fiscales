@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 const siteUrl =
   process.env.NUXT_PUBLIC_SITE_URL || 'https://www.csfacturacion.com'
 const siteName = process.env.NUXT_PUBLIC_SITE_NAME?.trim() || 'CSFacturación'
+const marketingUrl = process.env.NUXT_PUBLIC_MARKETING_URL?.trim() || siteUrl
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -30,7 +31,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    public: { siteName, siteUrl },
+    public: { siteName, siteUrl, marketingUrl },
   },
 
   app: {

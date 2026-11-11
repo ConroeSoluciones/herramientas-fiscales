@@ -70,12 +70,15 @@ pnpm test:sat-catalogos
 
 `NUXT_PUBLIC_SITE_NAME` controla el nombre mostrado y usado en metadatos. `NUXT_PUBLIC_SITE_URL` apunta a `https://www.csfacturacion.com` para que sitemap y URL canónicas usen el dominio publicado. Revisa `docs/identidad-visual-csfacturacion.md` antes de alterar logotipo, paleta, tipografía o tono de voz.
 
+Los CTA al sitio corporativo usan `NUXT_PUBLIC_MARKETING_URL` como destino (por defecto, `NUXT_PUBLIC_SITE_URL`) y agregan `utm_source=csfacturacion_herramientas`, `utm_medium=referral`, `utm_campaign=portal_utilidades` y un `utm_content` distinto por ubicación. `MarketingPromoBanner.vue` contiene el espacio visible `data-marketing-slot="campaign-promo"` para que Marketing reemplace el placeholder con la creatividad, el mensaje y el destino aprobados. Mantén los parámetros UTM o usa `useMarketingUrl` al agregar nuevas ubicaciones.
+
 ## Estructura
 
 - `app/pages/`: inicio, tipo de cambio, catálogo y detalle de errores del SAT, y páginas legales.
-- `app/components/` y `app/layouts/`: navegación, selector de tema, pie de página y layout común.
+- `app/components/` y `app/layouts/`: navegación, selector de tema, CTA/espacio de campaña, pie de página y layout común.
 - `app/assets/css/main.css`: estilos globales e integración de Tailwind CSS 4.
 - `app/composables/useCanonicalUrl.ts`: construcción de URLs canónicas desde el dominio del sitio.
+- `app/composables/useMarketingUrl.ts`: enlaces a CSFacturación con UTM por ubicación.
 - `server/api/catalogos-error.get.ts` y `server/api/catalogos-error/[clave].get.ts`: consultan MySQL desde el servidor y devuelven catálogos o filas filtradas, sin exponer credenciales.
 - `server/api/tipo-cambio/penultimo.get.ts`: consulta el registro de tipo de cambio mostrado en la portada.
 - `packages/sidof-scraper/`: paquete pnpm independiente con el scraper SIDOF existente.

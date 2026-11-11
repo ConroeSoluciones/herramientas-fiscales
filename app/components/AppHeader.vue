@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const marketingUrl = useMarketingUrl('header_conoce_csfacturacion')
+
 const navigation = [
   { label: 'Inicio', to: '/' },
   { label: 'Tipo de cambio', to: '/tipo-de-cambio-dolar-mxn' },
@@ -38,6 +40,15 @@ const navigation = [
             >
               {{ item.label }}
             </NuxtLink>
+          </li>
+          <li>
+            <a
+              :href="marketingUrl"
+              class="text-brand-800 hover:text-brand-950 focus-visible:outline-brand-700 dark:text-brand-200 dark:focus-visible:outline-brand-300 rounded-sm font-semibold underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:text-white"
+            >
+              Conoce CSFacturación
+              <span aria-hidden="true">↗</span>
+            </a>
           </li>
         </ul>
       </nav>
