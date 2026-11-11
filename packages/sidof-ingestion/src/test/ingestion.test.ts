@@ -130,3 +130,52 @@ test('backfill pagina hasta el corte de cinco años e incluye la fecha límite',
     inserted: 3,
   })
 })
+
+test('backfill limita la carga a las publicaciones más recientes solicitadas', async () => {
+  const requestedStarts: number[] = []
+  let insertedCodes: readonly number[] = []
+  const olderNotes: readonly SidofNotaReference[] = [
+    { codNota: 203, publicationDate: '2010-11-10', title: 'Nota 203' },
+    { codNota: 202, publicationDate: '2010-11-09', title: 'Nota 202' },
+    { codNota: 201, publicationDate: '2010-11-08', title: 'Nota 201' },
+    { codNota: 200, publicationDate: '2010-11-07', title: 'Nota 200' },
+  ]
+
+  const summary = await ingestLatest(
+    'backfill',
+    {
+      notes: {
+        async scrape(start = 0) {
+          requestedStarts.push(start)
+          return olderNotes.slice(start, start + 2)
+        },
+      },
+      details: {
+        async scrape(note) {
+          return scrapedItem(note)
+        },
+      },
+    },
+    {
+      async ensureSchema() {},
+      async findExistingCodNotas() {
+        return new Set()
+      },
+      async insertIfAbsent(records) {
+        insertedCodes = records.map((record) => record.codNota)
+        return records.length
+      },
+    },
+    { publicationLimit: 3 },
+  )
+
+  assert.deepEqual(requestedStarts, [0, 2])
+  assert.deepEqual(insertedCodes, [203, 202, 201])
+  assert.deepEqual(summary, {
+    mode: 'backfill',
+    listed: 3,
+    alreadyStored: 0,
+    detailRequests: 3,
+    inserted: 3,
+  })
+})

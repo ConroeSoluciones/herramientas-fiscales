@@ -47,6 +47,7 @@ export interface IngestionSummary {
 
 export interface IngestionOptions {
   readonly now?: Date
+  readonly publicationLimit?: number
 }
 
 export async function ingestLatest(
@@ -55,14 +56,27 @@ export async function ingestLatest(
   repository: TipoCambioRepository,
   options: IngestionOptions = {},
 ): Promise<IngestionSummary> {
+  if (
+    options.publicationLimit !== undefined &&
+    (!Number.isSafeInteger(options.publicationLimit) ||
+      options.publicationLimit < 1)
+  ) {
+    throw new RangeError('El límite debe ser un entero positivo.')
+  }
+
   await repository.ensureSchema()
 
   const notes =
     mode === 'backfill'
-      ? await scrapeLastFiveYears(
-          sources.notes,
-          getFiveYearsAgoDate(options.now ?? new Date()),
-        )
+      ? options.publicationLimit === undefined
+        ? await scrapeLastFiveYears(
+            sources.notes,
+            getFiveYearsAgoDate(options.now ?? new Date()),
+          )
+        : await scrapeLatestPublications(
+            sources.notes,
+            options.publicationLimit,
+          )
       : await sources.notes.scrape()
   const existingCodes = await repository.findExistingCodNotas(
     notes.map((note) => note.codNota),
@@ -85,6 +99,24 @@ export async function ingestLatest(
     detailRequests: records.length,
     inserted,
   }
+}
+
+async function scrapeLatestPublications(
+  notesSource: IngestionSources['notes'],
+  limit: number,
+): Promise<readonly SidofNotaReference[]> {
+  const notes: SidofNotaReference[] = []
+  let start = 0
+
+  while (notes.length < limit) {
+    const page = await notesSource.scrape(start)
+    if (page.length === 0) return notes
+
+    notes.push(...page.slice(0, limit - notes.length))
+    start += page.length
+  }
+
+  return notes
 }
 
 async function scrapeLastFiveYears(

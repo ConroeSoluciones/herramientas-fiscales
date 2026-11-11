@@ -28,11 +28,12 @@ CREATE DATABASE cs_herramientas
 Comandos de ingesta:
 
 ```sh
-pnpm db:backfill  # carga los avisos de los últimos cinco años
+pnpm db:backfill                         # carga los avisos de los últimos cinco años
+pnpm db:backfill --publicaciones 100     # carga las 100 publicaciones más recientes
 pnpm db:sync      # consulta el aviso más reciente e inserta codNota nuevo
 ```
 
-La carga inicial pagina los avisos de SIDOF hasta cubrir los últimos cinco años de publicación, descarga sus detalles y guarda el tipo de cambio USD/MXN. La sincronización consulta solo el aviso más reciente y pide su detalle únicamente si su `codNota` aún no está en MySQL. Ambos comandos son idempotentes: `cod_nota` es clave primaria, así que reintentar no duplica filas. `pnpm db:sync` debe invocarse diariamente por el scheduler del servidor; el cron todavía no está configurado.
+La carga inicial pagina los avisos de SIDOF hasta cubrir los últimos cinco años de publicación por defecto. Se puede pasar un límite entero positivo para leer las publicaciones más recientes indicadas, sin aplicar el corte de cinco años. Descarga los detalles y guarda el tipo de cambio USD/MXN. La sincronización consulta solo el aviso más reciente y pide su detalle únicamente si su `codNota` aún no está en MySQL. Ambos comandos son idempotentes: `cod_nota` es clave primaria, así que reintentar no duplica filas. `pnpm db:sync` debe invocarse diariamente por el scheduler del servidor; el cron todavía no está configurado.
 
 ## Catálogos de errores del SAT
 
