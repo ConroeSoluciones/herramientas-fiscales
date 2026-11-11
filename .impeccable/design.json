@@ -1,0 +1,552 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-11T00:00:00.000Z",
+  "title": "Design System: CSFacturación — Portal de herramientas fiscales",
+  "extensions": {
+    "colorMeta": {
+      "brand-50": {
+        "role": "primary",
+        "displayName": "Cian hielo",
+        "canonical": "#effaff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#1b2327",
+          "#333c40",
+          "#4e575b",
+          "#6a7378",
+          "#879196",
+          "#b5c0c4",
+          "#eeeeee"
+        ]
+      },
+      "brand-100": {
+        "role": "primary",
+        "displayName": "Cian pálido",
+        "canonical": "#ddf5fc",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#12252a",
+          "#2a3e44",
+          "#45595f",
+          "#60767c",
+          "#7d949a",
+          "#abc2c9",
+          "#eeeeee"
+        ]
+      },
+      "brand-200": {
+        "role": "primary",
+        "displayName": "Cian claro",
+        "canonical": "#bdebf9",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#002732",
+          "#15414c",
+          "#325c68",
+          "#4e7986",
+          "#6c97a4",
+          "#99c6d4",
+          "#eeeeee"
+        ]
+      },
+      "brand-300": {
+        "role": "primary",
+        "displayName": "Cian suave",
+        "canonical": "#8ddbf2",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#002836",
+          "#004457",
+          "#006074",
+          "#2c7d92",
+          "#4d9bb1",
+          "#7dcbe2",
+          "#eeeeee"
+        ]
+      },
+      "brand-400": {
+        "role": "primary",
+        "displayName": "Cian luminoso",
+        "canonical": "#55c2e6",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#002738",
+          "#004464",
+          "#006182",
+          "#007fa0",
+          "#279dc0",
+          "#74cbea",
+          "#eeeeee"
+        ]
+      },
+      "brand-500": {
+        "role": "primary",
+        "displayName": "Cian CS",
+        "canonical": "#00a5d5",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#00273a",
+          "#00436a",
+          "#00608d",
+          "#007ead",
+          "#009dcd",
+          "#78caed",
+          "#eeeeee"
+        ]
+      },
+      "brand-600": {
+        "role": "secondary",
+        "displayName": "Azul de marca",
+        "canonical": "#0187d2",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#00243e",
+          "#003d73",
+          "#0059a0",
+          "#0077c1",
+          "#2496e2",
+          "#88c5f7",
+          "#eeeeee"
+        ]
+      },
+      "brand-700": {
+        "role": "secondary",
+        "displayName": "Azul de acción",
+        "canonical": "#0069a8",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#00243e",
+          "#003d74",
+          "#005997",
+          "#1c77b7",
+          "#4196d8",
+          "#8ac4f7",
+          "#eeeeee"
+        ]
+      },
+      "brand-800": {
+        "role": "secondary",
+        "displayName": "Azul profundo",
+        "canonical": "#004f82",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#00233f",
+          "#003d6e",
+          "#12598d",
+          "#3576ac",
+          "#5495cd",
+          "#8bc4f7",
+          "#eeeeee"
+        ]
+      },
+      "brand-900": {
+        "role": "secondary",
+        "displayName": "Azul tinta",
+        "canonical": "#1a2c5b",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#132041",
+          "#243868",
+          "#3e5386",
+          "#5970a5",
+          "#768ec5",
+          "#a3bdf7",
+          "#eeeeee"
+        ]
+      },
+      "brand-950": {
+        "role": "secondary",
+        "displayName": "Azul noche",
+        "canonical": "#101c3b",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#13203f",
+          "#2b395b",
+          "#455478",
+          "#607196",
+          "#7d8fb6",
+          "#abbee7",
+          "#eeeeee"
+        ]
+      },
+      "slate-50": {
+        "role": "neutral",
+        "displayName": "Lienzo claro",
+        "canonical": "#f8fafc",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#202223",
+          "#393b3c",
+          "#545557",
+          "#707273",
+          "#8d8f91",
+          "#bcbec0",
+          "#eeeeee"
+        ]
+      },
+      "slate-100": {
+        "role": "neutral",
+        "displayName": "Slate de apoyo",
+        "canonical": "#f1f5f9",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#1f2225",
+          "#383b3e",
+          "#525659",
+          "#6e7275",
+          "#8c9093",
+          "#babec2",
+          "#eeeeee"
+        ]
+      },
+      "slate-200": {
+        "role": "neutral",
+        "displayName": "Borde claro",
+        "canonical": "#e2e8f0",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#1e2228",
+          "#363b41",
+          "#51565c",
+          "#6d7279",
+          "#8a9097",
+          "#b8bec6",
+          "#eeeeee"
+        ]
+      },
+      "slate-300": {
+        "role": "neutral",
+        "displayName": "Slate de campo",
+        "canonical": "#cbd5e1",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#1b222b",
+          "#333b45",
+          "#4e5660",
+          "#6a737d",
+          "#87909b",
+          "#b5bfcb",
+          "#eeeeee"
+        ]
+      },
+      "slate-400": {
+        "role": "neutral",
+        "displayName": "Slate medio claro",
+        "canonical": "#94a3b8",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#172232",
+          "#2f3b4d",
+          "#495669",
+          "#657386",
+          "#8290a5",
+          "#b0bfd5",
+          "#eeeeee"
+        ]
+      },
+      "slate-500": {
+        "role": "neutral",
+        "displayName": "Slate de metadatos",
+        "canonical": "#64748b",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#152235",
+          "#2d3b50",
+          "#47566c",
+          "#63738a",
+          "#8090a8",
+          "#aebfd8",
+          "#eeeeee"
+        ]
+      },
+      "slate-600": {
+        "role": "neutral",
+        "displayName": "Texto secundario",
+        "canonical": "#475569",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#162233",
+          "#2e3b4e",
+          "#48566a",
+          "#647388",
+          "#8190a6",
+          "#afbfd6",
+          "#eeeeee"
+        ]
+      },
+      "slate-700": {
+        "role": "neutral",
+        "displayName": "Slate de lectura",
+        "canonical": "#334155",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#152234",
+          "#2d3b4f",
+          "#48566b",
+          "#637389",
+          "#8090a7",
+          "#aebfd7",
+          "#eeeeee"
+        ]
+      },
+      "slate-800": {
+        "role": "neutral",
+        "displayName": "Borde oscuro",
+        "canonical": "#1e293b",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#172233",
+          "#2f3b4e",
+          "#49566a",
+          "#657288",
+          "#8290a6",
+          "#b0bfd6",
+          "#eeeeee"
+        ]
+      },
+      "slate-900": {
+        "role": "neutral",
+        "displayName": "Texto y superficie oscura",
+        "canonical": "#0f172a",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#182135",
+          "#313a50",
+          "#4b556c",
+          "#66718a",
+          "#848fa8",
+          "#b2bed8",
+          "#eeeeee"
+        ]
+      },
+      "slate-950": {
+        "role": "neutral",
+        "displayName": "Fondo oscuro",
+        "canonical": "#020617",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#182135",
+          "#303a50",
+          "#4a556c",
+          "#66728a",
+          "#838fa9",
+          "#b1bed9",
+          "#eeeeee"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Blanco de superficie",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#222222",
+          "#3a3a3a",
+          "#555555",
+          "#717171",
+          "#8f8f8f",
+          "#bebebe",
+          "#eeeeee"
+        ]
+      },
+      "rose-error": {
+        "role": "tertiary",
+        "displayName": "Rojo de error",
+        "canonical": "#9f1239",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#3b1218",
+          "#6b1327",
+          "#981e3a",
+          "#c03953",
+          "#dd6072",
+          "#f4a5ac",
+          "#eeeeee"
+        ]
+      },
+      "emerald-success": {
+        "role": "tertiary",
+        "displayName": "Verde de éxito",
+        "canonical": "#047857",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#002b1a",
+          "#004a2d",
+          "#006747",
+          "#1f8563",
+          "#45a380",
+          "#80d1af",
+          "#eeeeee"
+        ]
+      },
+      "amber-warning": {
+        "role": "tertiary",
+        "displayName": "Ámbar de atención",
+        "canonical": "#b45309",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#391601",
+          "#691e00",
+          "#913300",
+          "#b25105",
+          "#d47033",
+          "#f0ac87",
+          "#eeeeee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titular principal de portada; Montserrat concentra la presencia de marca."
+      },
+      "body": {
+        "displayName": "Lectura y controles",
+        "purpose": "Rubik mantiene legibles formularios, navegación y explicaciones."
+      },
+      "label": {
+        "displayName": "Etiqueta",
+        "purpose": "Rótulos breves y metadatos; usar mayúsculas y tracking solo en etiquetas cortas."
+      }
+    },
+    "shadows": [
+      {
+        "name": "resting-soft",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "purpose": "Separación ligera en tarjetas de formularios y datos."
+      },
+      {
+        "name": "hover-medium",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "purpose": "Énfasis breve para tarjetas interactivas y contenido prioritario."
+      },
+      {
+        "name": "hover-strong",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Hover destacado en tarjetas de herramienta de portada."
+      }
+    ],
+    "motion": [
+      {
+        "name": "interaction-standard",
+        "value": "all 200ms ease",
+        "purpose": "Transiciones de botones y tarjetas; acompañar con una respuesta hover discreta."
+      },
+      {
+        "name": "date-picker",
+        "value": "all 150ms ease",
+        "purpose": "Transiciones compactas del calendario de fecha."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal de herramientas: azul tinta, tamaño cómodo y foco visible.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Calcular antigüedad</button>",
+      "css": ".ds-btn-primary { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; background: var(--color-brand-900, #1a2c5b); color: #fff; padding: 12px 16px; font: 600 14px/1.3 Rubik, ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 200ms ease, box-shadow 200ms ease; } .ds-btn-primary:hover { background: var(--color-brand-800, #004f82); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 3px; } .ds-btn-primary:active { background: var(--color-brand-800, #004f82); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-promo",
+      "description": "Acción secundaria con el azul corporativo; usar para promoción o siguiente paso no primario.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Conocer CSFacturación <span aria-hidden=\"true\">↗</span></button>",
+      "css": ".ds-btn-secondary { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 8px; background: var(--color-brand-700, #0069a8); color: #fff; padding: 10px 20px; font: 600 14px/1.3 Rubik, ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 200ms ease; } .ds-btn-secondary:hover { background: var(--color-brand-800, #004f82); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 3px; } .ds-btn-secondary:active { background: var(--color-brand-900, #1a2c5b); }"
+    },
+    {
+      "name": "Catalog Search Field",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Campo de búsqueda con etiqueta clara y foco en borde y anillo.",
+      "html": "<label class=\"ds-field\" for=\"ds-catalog-search\"><span>Busca un código o el texto del error</span><input class=\"ds-input\" id=\"ds-catalog-search\" type=\"search\" placeholder=\"Ejemplo: CFDI40101\" /></label>",
+      "css": ".ds-field { display: grid; gap: 8px; color: #0f172a; font: 600 16px/1.5 Rubik, ui-sans-serif, system-ui, sans-serif; } .ds-input { width: 100%; min-height: 48px; border: 1px solid #cbd5e1; border-radius: 12px; background: #fff; color: #0f172a; padding: 12px 16px; font: 400 16px/1.5 Rubik, ui-sans-serif, system-ui, sans-serif; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); } .ds-input::placeholder { color: #94a3b8; } .ds-input:focus { border-color: var(--color-brand-500, #00a5d5); outline: none; box-shadow: 0 0 0 2px #bdebf9; } .ds-input:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tool Card",
+      "kind": "card",
+      "refersTo": "card-default",
+      "description": "Tarjeta enlazada para una herramienta; borde fino y elevación breve al hover.",
+      "html": "<a class=\"ds-tool-card\" href=\"#herramienta\"><span class=\"ds-chip\">USD/MXN</span><strong>Tipo de Cambio SAT</strong><span>Consulta el tipo de cambio oficial por fecha.</span><span class=\"ds-card-link\">Ver tipo de cambio »</span></a>",
+      "css": ".ds-tool-card { display: flex; min-height: 240px; flex-direction: column; align-items: flex-start; gap: 16px; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; color: #0f172a; padding: 28px; text-decoration: none; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease; } .ds-tool-card:hover { border-color: var(--color-brand-300, #8ddbf2); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); transform: translateY(-4px); } .ds-tool-card:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 3px; } .ds-tool-card strong { font: 600 20px/1.4 Montserrat, ui-sans-serif, system-ui, sans-serif; } .ds-tool-card > span:not(.ds-chip):not(.ds-card-link) { color: #475569; font: 400 16px/1.75 Rubik, ui-sans-serif, system-ui, sans-serif; } .ds-chip { border-radius: 9999px; background: #effaff; color: #004f82; padding: 4px 12px; font: 600 12px/1.3 Rubik, ui-sans-serif, system-ui, sans-serif; } .ds-card-link { margin-top: auto; color: #004f82; font: 600 14px/1.4 Rubik, ui-sans-serif, system-ui, sans-serif; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "description": "Enlaces textuales discretos junto al logotipo oficial y el selector de tema.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegación principal\"><a href=\"#inicio\">Inicio</a><a href=\"#tipo-cambio\">Tipo de cambio</a><a href=\"#antiguedad\">Antigüedad laboral</a><a href=\"#errores\">Códigos de error SAT</a></nav>",
+      "css": ".ds-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; } .ds-nav a { border-radius: 2px; color: #475569; font: 500 14px/1.5 Rubik, ui-sans-serif, system-ui, sans-serif; text-decoration: none; text-underline-offset: 4px; } .ds-nav a:hover { color: var(--color-brand-800, #004f82); text-decoration: underline; } .ds-nav a:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 2px; }"
+    },
+    {
+      "name": "Theme Switcher",
+      "kind": "custom",
+      "description": "Grupo compacto con selección explícita para claro, oscuro o sistema.",
+      "html": "<div class=\"ds-theme\" role=\"group\" aria-label=\"Tema de color\"><button type=\"button\" aria-pressed=\"true\">Claro</button><button type=\"button\" aria-pressed=\"false\">Oscuro</button><button type=\"button\" aria-pressed=\"false\">Sistema</button></div>",
+      "css": ".ds-theme { display: inline-flex; width: fit-content; gap: 2px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f1f5f9; padding: 4px; } .ds-theme button { min-height: 32px; border: 0; border-radius: 8px; background: transparent; color: #475569; padding: 0 8px; font: 500 12px/1.3 Rubik, ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-theme button[aria-pressed=\"true\"] { background: #fff; color: #1a2c5b; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); } .ds-theme button:hover { color: var(--color-brand-800, #004f82); } .ds-theme button:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 2px; }"
+    },
+    {
+      "name": "Featured Exchange Rate",
+      "kind": "card",
+      "refersTo": "card-featured",
+      "description": "Tarjeta prioritaria de portada que une cifra, fecha y acceso al historial.",
+      "html": "<a class=\"ds-rate-card\" href=\"#historial\"><span class=\"ds-rate-label\">PARA PAGOS SAT HOY</span><strong>$17.1234</strong><span class=\"ds-rate-date\">TIPO DE CAMBIO · 11/11/2026</span><span class=\"ds-rate-link\">Ver FIX, DOF y Para Pagos »</span></a>",
+      "css": ".ds-rate-card { display: flex; max-width: 576px; flex-direction: column; gap: 4px; border: 1px solid #bdebf9; border-radius: 16px; background: #effaff; color: #1a2c5b; padding: 20px 28px; text-align: left; text-decoration: none; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); transition: border-color 200ms ease, box-shadow 200ms ease; } .ds-rate-card:hover { border-color: var(--color-brand-500, #00a5d5); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); } .ds-rate-card:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 3px; } .ds-rate-label { font: 600 12px/1.3 Rubik, ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; } .ds-rate-card strong { color: #0f172a; font: 600 36px/1.1 Montserrat, ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-rate-date { font: 500 12px/1.4 Rubik, ui-sans-serif, system-ui, sans-serif; letter-spacing: .05em; } .ds-rate-link { margin-top: 8px; border-top: 1px solid #bdebf9; padding-top: 12px; font: 500 14px/1.5 Rubik, ui-sans-serif, system-ui, sans-serif; }"
+    },
+    {
+      "name": "Promotion Callout",
+      "kind": "card",
+      "description": "Promoción corporativa secundaria, separada de la herramienta prioritaria.",
+      "html": "<section class=\"ds-promo\"><div><span class=\"ds-promo-label\">Más de CSFacturación</span><strong>Haz más sencilla tu operación de facturación</strong><p>Conoce más soluciones de CSFacturación para tu negocio.</p><a href=\"#csfacturacion\">Conocer CSFacturación ↗</a></div></section>",
+      "css": ".ds-promo { display: grid; max-width: 1024px; gap: 20px; border: 1px solid #bdebf9; border-radius: 16px; background: #fff; padding: 28px; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); } .ds-promo-label { display: block; color: #004f82; font: 600 12px/1.3 Rubik, ui-sans-serif, system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; } .ds-promo strong { display: block; margin-top: 8px; color: #0f172a; font: 600 24px/1.3 Montserrat, ui-sans-serif, system-ui, sans-serif; } .ds-promo p { margin: 12px 0 0; color: #475569; font: 400 14px/1.7 Rubik, ui-sans-serif, system-ui, sans-serif; } .ds-promo a { display: inline-flex; min-height: 44px; align-items: center; margin-top: 20px; border-radius: 8px; background: var(--color-brand-700, #0069a8); color: #fff; padding: 10px 20px; font: 600 14px/1.3 Rubik, ui-sans-serif, system-ui, sans-serif; text-decoration: none; } .ds-promo a:hover { background: var(--color-brand-800, #004f82); } .ds-promo a:focus-visible { outline: 2px solid var(--color-brand-700, #0069a8); outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Mesa de trabajo fiscal",
+    "overview": "El portal se siente como una mesa de trabajo clara y serena: una interfaz en español para resolver una consulta concreta, leer datos con contexto y continuar la tarea sin ruido visual. La marca corporativa aporta reconocimiento mediante su logotipo oficial y su gama de azules; la interfaz conserva una voz propia, práctica y precisa, sin parecer una herramienta operada o avalada por el SAT.\n\nLa energía visual aparece en el acento azul, las acciones principales y los espacios promocionales de CSFacturación, pero la tarea siempre domina la jerarquía. El tono combina claridad y precisión con una presencia promocional medida; controles familiares, estados visibles y superficies ordenadas sostienen el uso cotidiano en los temas claro y oscuro.",
+    "keyCharacteristics": [
+      "La consulta o herramienta es el foco; la marca acompaña sin competir.",
+      "Cian CS y azul tinta definen una identidad corporativa reconocible.",
+      "Tarjetas suaves y controles familiares favorecen lectura y acción.",
+      "El mismo lenguaje visual se adapta a tema claro, oscuro y sistema."
+    ],
+    "rules": [
+      {
+        "name": "The Cian-as-Accent Rule",
+        "body": "El cian identifica, selecciona y acentúa; el azul tinta o el azul de acción llevan texto y acciones que requieren contraste.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Montserrat pertenece a la jerarquía de títulos; Rubik a la lectura, navegación y controles. No se añade una tercera familia decorativa.",
+        "section": "typography"
+      },
+      {
+        "name": "The Soft-Layer Rule",
+        "body": "El contraste tonal y el borde definen la superficie; la sombra solo confirma prioridad o interacción.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do mantener visible el logotipo oficial sin modificar sus proporciones o colores.",
+      "Do dar prioridad visual al dato y a la herramienta que resuelve la consulta.",
+      "Do usar colores semánticos solo para error, éxito y atención.",
+      "Do conservar estados hover y focus-visible legibles en los temas claro y oscuro.",
+      "Do mantener la promoción corporativa presente pero secundaria frente a la tarea."
+    ],
+    "donts": [
+      "Don't insinuar que la interfaz o la marca tienen aval u operación del SAT.",
+      "Don't usar cian brillante como texto pequeño sobre blanco sin comprobar contraste.",
+      "Don't sustituir el logotipo por texto reconstruido o un icono genérico de dólar.",
+      "Don't añadir sombras fuertes, degradados decorativos o movimiento que distraiga de los datos.",
+      "Don't permitir que un bloque promocional desplace la herramienta prioritaria."
+    ]
+  }
+}
