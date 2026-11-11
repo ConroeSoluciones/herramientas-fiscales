@@ -1,0 +1,5 @@
+node_modules/
+.nuxt/
+.output/
+packages/sidof-scraper/dist/
+pnpm-lock.yaml

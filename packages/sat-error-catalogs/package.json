@@ -1,0 +1,33 @@
+{
+  "name": "@cs-herramientas/sat-error-catalogs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Descarga e ingesta de catálogos de errores del SAT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true })\"",
+    "clean:test": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('dist/test', { recursive: true, force: true })\"",
+    "build": "tsc -p tsconfig.json",
+    "sync": "pnpm run build && node --env-file=../../.env dist/cli.js sync",
+    "test": "pnpm run clean:test && pnpm run build && node --test dist/test/*.test.js"
+  },
+  "dependencies": {
+    "@e965/xlsx": "^0.20.3",
+    "mysql2": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "~5.9.3"
+  }
+}

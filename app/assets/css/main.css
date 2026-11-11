@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Rubik', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #effaff;
+  --color-brand-100: #ddf5fc;
+  --color-brand-200: #bdebf9;
+  --color-brand-300: #8ddbf2;
+  --color-brand-400: #55c2e6;
+  --color-brand-500: #00a5d5;
+  --color-brand-600: #0187d2;
+  --color-brand-700: #0069a8;
+  --color-brand-800: #004f82;
+  --color-brand-900: #1a2c5b;
+  --color-brand-950: #101c3b;
+}
+
+:root {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}

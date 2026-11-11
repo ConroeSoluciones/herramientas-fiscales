@@ -1,0 +1,45 @@
+{
+  "downloadDirectory": "../.data/sat-error-catalogs",
+  "catalogos": [
+    {
+      "clave": "cfdi_v40",
+      "nombre": "Matriz de errores CFDI 4.0",
+      "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/MatrizDeErrores_CFDI_v40_20260325.xls"
+    },
+    {
+      "clave": "retenciones_v20",
+      "nombre": "Matriz de errores CFDI Retenciones 2.0",
+      "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/MatrizDeErrores_CFDI_Retenciones_v20.xls"
+    },
+    {
+      "clave": "carta_porte_v31",
+      "nombre": "Matriz de errores Carta Porte 3.1",
+      "url": "https://ampocdevbuk01a.s3.us-east-1.amazonaws.com/Matriz_Errores_CCP_V31_15d77ee8eb.xls"
+    },
+    {
+      "clave": "comercio_exterior_v20_rev_a",
+      "nombre": "Matriz de errores Comercio Exterior 2.0",
+      "url": "https://ampocdevbuk01a.s3.us-east-1.amazonaws.com/Matriz_de_Errores_CCE_v2_0_r_A_76f1e17af8.xls"
+    },
+    {
+      "clave": "ine_v11",
+      "nombre": "Matriz de errores INE",
+      "url": "https://www.sat.gob.mx/cs/Satellite?blobcol=urldata&blobkey=id&blobtable=MungoBlobs&blobwhere=1461175745349&ssbinary=true"
+    },
+    {
+      "clave": "recepcion_pagos_v20_rev_b",
+      "nombre": "Matriz de errores Recepción de Pagos 2.0",
+      "url": "https://ampocdevbuk01a.s3.us-east-1.amazonaws.com/Matriz_De_Errores_CRP_V20_Rev_B_b6fdbe7f31.xls"
+    },
+    {
+      "clave": "nomina_v12_rev_e",
+      "nombre": "Matriz de errores Nómina",
+      "url": "https://ampocdevbuk01a.s3.us-east-1.amazonaws.com/Matriz_Errores_Nomina_v12_Rev_E_de80469d51.xls"
+    },
+    {
+      "clave": "servicios_plataformas_tecnologicas_v10_rev_e",
+      "nombre": "Matriz de errores Servicios de Plataformas Tecnológicas",
+      "url": "https://ampocdevbuk01a.s3.us-east-1.amazonaws.com/Matriz_errores_Servicios_de_Plataformas_Tecnologicas_v10r_E_d7b06169a7.xlsx"
+    }
+  ]
+}

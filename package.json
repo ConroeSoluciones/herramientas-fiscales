@@ -1,0 +1,49 @@
+{
+  "name": "cs-herramientas-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sitio web de utilidades",
+  "type": "module",
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build:packages": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion build && pnpm --filter @cs-herramientas/sat-error-catalogs build",
+    "build": "pnpm run build:packages && nuxt build",
+    "dev": "nuxt dev",
+    "postinstall": "pnpm run build:packages && nuxt prepare",
+    "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:scraper": "pnpm --filter @cs-herramientas/sidof-scraper test",
+    "db:backfill": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion backfill",
+    "db:sync": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion sync",
+    "test:ingestion": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion test",
+    "sat:catalogos:sync": "pnpm --filter @cs-herramientas/sat-error-catalogs sync",
+    "test:sat-catalogos": "pnpm --filter @cs-herramientas/sat-error-catalogs test"
+  },
+  "dependencies": {
+    "@cs-herramientas/sat-error-catalogs": "workspace:*",
+    "@cs-herramientas/sidof-ingestion": "workspace:*"
+  },
+  "devDependencies": {
+    "@nuxtjs/color-mode": "~4.1.0",
+    "@nuxt/eslint": "~1.17.0",
+    "@nuxtjs/robots": "~7.0.2",
+    "@nuxtjs/sitemap": "~9.1.0",
+    "@tailwindcss/vite": "~4.3.5",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.14.0",
+    "nuxt": "~4.6.4",
+    "nuxt-schema-org": "~7.0.1",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "~4.3.5",
+    "typescript": "~5.9.3",
+    "vue-tsc": "^3.3.14"
+  }
+}
