@@ -12,8 +12,10 @@ interface CatalogDetailResponse {
 const route = useRoute()
 const { public: publicConfig } = useRuntimeConfig()
 const clave = computed(() => String(route.params.clave ?? ''))
-const searchInput = ref('')
-const searchQuery = ref('')
+const initialSearchQuery =
+  typeof route.query.q === 'string' ? route.query.q.trim() : ''
+const searchInput = ref(initialSearchQuery)
+const searchQuery = ref(initialSearchQuery)
 let debounceTimer: ReturnType<typeof setTimeout> | undefined
 
 watch(searchInput, (value) => {

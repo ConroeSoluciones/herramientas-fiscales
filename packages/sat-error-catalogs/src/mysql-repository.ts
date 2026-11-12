@@ -6,6 +6,7 @@ import type {
 } from 'mysql2/promise'
 import type {
   CatalogErrorRecord,
+  CatalogErrorSearchResult,
   CatalogSummary,
   ParsedCatalog,
 } from './types.js'
@@ -42,6 +43,8 @@ const CREATE_ERROR_TABLE_SQL = `
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 `
 
+const GLOBAL_SEARCH_RESULT_LIMIT = 50
+
 interface CatalogIdRow extends RowDataPacket {
   id: number
 }
@@ -66,6 +69,11 @@ interface CatalogErrorRowResult extends RowDataPacket {
   codigo_error: string
   descripcion_codigo_error: string
   aclaraciones: string | null
+}
+
+interface CatalogErrorSearchRowResult extends CatalogErrorRowResult {
+  catalog_clave: string
+  catalog_nombre: string
 }
 
 interface ColumnNameRow extends RowDataPacket {
@@ -178,6 +186,43 @@ export class MysqlCatalogRepository {
       codigoError: row.codigo_error,
       descripcionCodigoError: row.descripcion_codigo_error,
       aclaraciones: row.aclaraciones ?? '',
+    }))
+  }
+
+  async searchErrorsAcrossCatalogs(
+    searchTerm: string,
+  ): Promise<CatalogErrorSearchResult[]> {
+    const normalizedSearch = searchTerm.trim()
+    if (!normalizedSearch) return []
+
+    const hasClarificationsColumn = await this.hasClarificationsColumn()
+    const escapedSearch = normalizedSearch.replace(/[\\%_]/g, '\\$&')
+    const [rows] = await this.pool.execute<CatalogErrorSearchRowResult[]>(
+      `SELECT
+         e.id, e.num, e.elemento, e.atributo, e.validacion,
+         e.codigo_error, e.descripcion_codigo_error,
+         ${hasClarificationsColumn ? 'e.aclaraciones' : "'' AS aclaraciones"},
+         c.clave AS catalog_clave, c.nombre AS catalog_nombre
+       FROM sat_catalogo_errores AS e
+       INNER JOIN sat_catalogos AS c ON c.id = e.catalogo_id
+       WHERE e.codigo_error LIKE ?
+       ORDER BY CASE WHEN e.codigo_error = ? THEN 0 ELSE 1 END,
+         e.codigo_error ASC, c.nombre ASC, e.id ASC
+       LIMIT ${GLOBAL_SEARCH_RESULT_LIMIT + 1}`,
+      [`${escapedSearch}%`, normalizedSearch],
+    )
+
+    return rows.map((row) => ({
+      id: Number(row.id),
+      num: row.num,
+      elemento: row.elemento,
+      atributo: row.atributo,
+      validacion: row.validacion,
+      codigoError: row.codigo_error,
+      descripcionCodigoError: row.descripcion_codigo_error,
+      aclaraciones: row.aclaraciones ?? '',
+      catalogClave: row.catalog_clave,
+      catalogNombre: row.catalog_nombre,
     }))
   }
 

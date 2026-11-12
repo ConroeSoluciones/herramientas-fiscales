@@ -46,3 +46,8 @@ export interface CatalogErrorRecord {
   descripcionCodigoError: string
   aclaraciones: string
 }
+
+export interface CatalogErrorSearchResult extends CatalogErrorRecord {
+  catalogClave: string
+  catalogNombre: string
+}

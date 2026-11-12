@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CatalogErrorSearchResult } from '@cs-herramientas/sat-error-catalogs'
+
 interface ErrorCatalogSummary {
   id: number
   clave: string
@@ -8,6 +10,11 @@ interface ErrorCatalogSummary {
   totalErrores: number
   primerCodigo: string | null
   ultimoCodigo: string | null
+}
+
+interface CatalogCodeSearchResponse {
+  results: CatalogErrorSearchResult[]
+  hasMore: boolean
 }
 
 const { public: publicConfig } = useRuntimeConfig()
@@ -33,6 +40,65 @@ const {
   key: 'sat-error-catalogs',
   default: () => [],
 })
+
+const searchInput = ref('')
+const searchStatus = ref<'idle' | 'pending' | 'success' | 'error'>('idle')
+const searchResults = ref<CatalogErrorSearchResult[]>([])
+const hasMoreSearchResults = ref(false)
+let searchTimer: ReturnType<typeof setTimeout> | undefined
+let searchController: AbortController | undefined
+
+async function searchAcrossCatalogs(query: string) {
+  const controller = new AbortController()
+  searchController = controller
+  searchStatus.value = 'pending'
+
+  try {
+    const response = await $fetch<CatalogCodeSearchResponse>(
+      '/api/catalogos-error/buscar',
+      { query: { q: query }, signal: controller.signal },
+    )
+
+    if (searchController !== controller) return
+    searchResults.value = response.results
+    hasMoreSearchResults.value = response.hasMore
+    searchStatus.value = 'success'
+  } catch {
+    if (searchController !== controller) return
+    searchStatus.value = 'error'
+  } finally {
+    if (searchController === controller) searchController = undefined
+  }
+}
+
+watch(searchInput, (value) => {
+  if (searchTimer) clearTimeout(searchTimer)
+  searchController?.abort()
+  searchController = undefined
+  searchResults.value = []
+  hasMoreSearchResults.value = false
+
+  const query = value.trim()
+  if (query.length < 2) {
+    searchStatus.value = 'idle'
+    return
+  }
+
+  searchStatus.value = 'pending'
+  searchTimer = setTimeout(() => {
+    void searchAcrossCatalogs(query)
+  }, 250)
+})
+
+onBeforeUnmount(() => {
+  if (searchTimer) clearTimeout(searchTimer)
+  searchController?.abort()
+})
+
+function retrySearch() {
+  const query = searchInput.value.trim()
+  if (query.length >= 2) void searchAcrossCatalogs(query)
+}
 
 function formatUpdatedAt(value: string): string {
   const date = new Date(`${value.replace(' ', 'T')}Z`)
@@ -70,7 +136,133 @@ function formatUpdatedAt(value: string): string {
         <p
           class="mt-6 text-base leading-7 text-slate-700 sm:text-lg sm:leading-8 dark:text-slate-300"
         >
-          Entra al catálogo del complemento que estás usando y busca tu código.
+          Busca un código en todas las matrices o elige un catálogo para
+          consultarlo completo.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="mx-auto max-w-5xl py-8 sm:py-10"
+      aria-labelledby="busqueda-global-titulo"
+    >
+      <div
+        class="rounded-2xl border border-slate-200 bg-slate-100 p-5 sm:p-6 dark:border-slate-800 dark:bg-slate-900"
+      >
+        <h2
+          id="busqueda-global-titulo"
+          class="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl dark:text-white"
+        >
+          Busca un código en todas las matrices
+        </h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+          Escribe el código completo o sus primeros caracteres.
+        </p>
+        <form role="search" class="mt-5" @submit.prevent>
+          <label
+            for="busqueda-global-errores"
+            class="mb-2 block text-sm font-semibold text-slate-900 dark:text-white"
+          >
+            Código de error
+          </label>
+          <!-- eslint-disable vue/html-self-closing -->
+          <input
+            id="busqueda-global-errores"
+            v-model="searchInput"
+            type="search"
+            autocomplete="off"
+            maxlength="120"
+            aria-describedby="ayuda-busqueda-global estado-busqueda-global"
+            placeholder="Ejemplo: CFDI40101"
+            class="focus:border-brand-500 focus:ring-brand-200 dark:focus:border-brand-400 dark:focus:ring-brand-900 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-950 shadow-sm outline-none placeholder:text-slate-400 focus:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+          />
+          <!-- eslint-enable vue/html-self-closing -->
+        </form>
+        <p
+          id="ayuda-busqueda-global"
+          class="mt-2 text-sm text-slate-500 dark:text-slate-400"
+        >
+          Escribe al menos dos caracteres para iniciar la búsqueda.
+        </p>
+        <p
+          id="estado-busqueda-global"
+          role="status"
+          aria-live="polite"
+          class="mt-3 text-sm text-slate-600 dark:text-slate-300"
+        >
+          <template v-if="searchStatus === 'pending'">
+            Buscando en todos los catálogos…
+          </template>
+          <template v-else-if="searchStatus === 'success'">
+            <template v-if="searchResults.length > 0">
+              {{ searchResults.length }}
+              {{
+                searchResults.length === 1 ? 'coincidencia' : 'coincidencias'
+              }}
+              {{ hasMoreSearchResults ? 'o más' : '' }}
+            </template>
+            <template v-else
+              >No encontramos ese código en las matrices.</template
+            >
+          </template>
+          <template v-else-if="searchStatus === 'error'">
+            No fue posible realizar la búsqueda.
+          </template>
+        </p>
+        <button
+          v-if="searchStatus === 'error'"
+          type="button"
+          class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 mt-3 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          @click="retrySearch"
+        >
+          Reintentar búsqueda
+        </button>
+        <ul
+          v-if="searchStatus === 'success' && searchResults.length > 0"
+          class="mt-5 space-y-3"
+          aria-label="Resultados de la búsqueda global"
+        >
+          <li
+            v-for="result in searchResults"
+            :key="`${result.catalogClave}-${result.id}`"
+          >
+            <article
+              class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 dark:border-slate-800 dark:bg-slate-950"
+            >
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <span
+                  class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 rounded-lg px-3 py-1 font-mono text-sm font-bold"
+                >
+                  {{ result.codigoError }}
+                </span>
+                <span class="text-sm text-slate-600 dark:text-slate-300">
+                  {{ result.catalogNombre }}
+                </span>
+              </div>
+              <p
+                class="mt-3 leading-7 break-words text-slate-800 dark:text-slate-200"
+              >
+                {{ result.descripcionCodigoError }}
+              </p>
+              <NuxtLink
+                :to="{
+                  path: `/errores/${result.catalogClave}`,
+                  query: { q: result.codigoError },
+                }"
+                class="text-brand-800 focus-visible:outline-brand-700 dark:text-brand-300 dark:focus-visible:outline-brand-300 mt-3 inline-flex font-semibold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                Ver detalle en esta matriz
+                <span class="ml-1" aria-hidden="true">»</span>
+              </NuxtLink>
+            </article>
+          </li>
+        </ul>
+        <p
+          v-if="hasMoreSearchResults"
+          class="mt-4 text-sm text-slate-500 dark:text-slate-400"
+        >
+          Se muestran las primeras 50 coincidencias. Agrega más caracteres para
+          acotar la búsqueda.
         </p>
       </div>
     </section>

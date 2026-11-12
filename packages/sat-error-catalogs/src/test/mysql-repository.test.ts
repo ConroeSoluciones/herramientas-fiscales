@@ -135,3 +135,78 @@ test('searchCatalogErrors filtra por código y contenido de error', async () => 
     },
   ])
 })
+
+test('searchErrorsAcrossCatalogs busca por prefijo de código y limita resultados', async () => {
+  let query = ''
+  let parameters: unknown[] = []
+  const pool = {
+    async execute(statement: string, values: unknown[] = []) {
+      if (statement.includes('INFORMATION_SCHEMA.COLUMNS')) {
+        return [[{ column_name: 'aclaraciones' }], []]
+      }
+      query = statement
+      parameters = values
+      return [
+        [
+          {
+            id: 42,
+            num: '42',
+            elemento: 'CFDI',
+            atributo: 'Version',
+            validacion: 'Debe ser 4.0',
+            codigo_error: 'CFDI40101',
+            descripcion_codigo_error: 'Versión inválida',
+            aclaraciones: 'Validar versión',
+            catalog_clave: 'cfdi_v40',
+            catalog_nombre: 'Matriz CFDI',
+          },
+        ],
+        [],
+      ]
+    },
+  } as unknown as Pool
+
+  const results = await new MysqlCatalogRepository(
+    pool,
+  ).searchErrorsAcrossCatalogs('CFDI401')
+
+  assert.match(query, /INNER JOIN sat_catalogos AS c/)
+  assert.match(query, /WHERE e\.codigo_error LIKE \?/)
+  assert.match(query, /ORDER BY CASE WHEN e\.codigo_error = \? THEN 0/)
+  assert.match(query, /LIMIT 51/)
+  assert.deepEqual(parameters, ['CFDI401%', 'CFDI401'])
+  assert.deepEqual(results, [
+    {
+      id: 42,
+      num: '42',
+      elemento: 'CFDI',
+      atributo: 'Version',
+      validacion: 'Debe ser 4.0',
+      codigoError: 'CFDI40101',
+      descripcionCodigoError: 'Versión inválida',
+      aclaraciones: 'Validar versión',
+      catalogClave: 'cfdi_v40',
+      catalogNombre: 'Matriz CFDI',
+    },
+  ])
+})
+
+test('searchErrorsAcrossCatalogs escapa comodines y omite aclaraciones si no existe la columna', async () => {
+  let query = ''
+  let parameters: unknown[] = []
+  const pool = {
+    async execute(statement: string, values: unknown[] = []) {
+      if (statement.includes('INFORMATION_SCHEMA.COLUMNS')) {
+        return [[], []]
+      }
+      query = statement
+      parameters = values
+      return [[], []]
+    },
+  } as unknown as Pool
+
+  await new MysqlCatalogRepository(pool).searchErrorsAcrossCatalogs('A_B%')
+
+  assert.match(query, /'' AS aclaraciones/)
+  assert.deepEqual(parameters, ['A\\_B\\%%', 'A_B%'])
+})
