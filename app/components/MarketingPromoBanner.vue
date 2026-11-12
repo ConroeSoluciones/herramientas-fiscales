@@ -28,10 +28,23 @@ const marketingUrl = useMarketingUrl('banner_conoce_csfacturacion')
       </p>
       <a
         :href="marketingUrl"
-        class="bg-brand-700 hover:bg-brand-800 focus-visible:outline-brand-700 dark:bg-brand-600 dark:hover:bg-brand-500 dark:focus-visible:outline-brand-300 mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="bg-brand-700 hover:bg-brand-800 focus-visible:outline-brand-700 dark:bg-brand-600 dark:hover:bg-brand-500 dark:focus-visible:outline-brand-300 mt-5 flex min-h-11 w-full items-center justify-center gap-3 rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-fit"
       >
         Conocer CSFacturación
-        <span aria-hidden="true">↗</span>
+        <svg
+          aria-hidden="true"
+          class="size-4 shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 17 17 7M8 7h9v9"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </a>
     </div>
 

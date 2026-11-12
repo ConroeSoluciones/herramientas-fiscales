@@ -89,7 +89,7 @@ const sourceUrl = computed(() => {
         to="/tipo-de-cambio-dolar-mxn"
         class="border-brand-300 bg-brand-50/70 hover:border-brand-500 focus-visible:outline-brand-700 dark:border-brand-800 dark:bg-brand-950/50 dark:focus-visible:outline-brand-300 mx-auto flex max-w-xl flex-col items-stretch gap-4 rounded-2xl border p-4 text-left shadow-sm transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 sm:flex-row sm:items-center sm:justify-between sm:p-5 sm:px-7"
       >
-        <div class="min-w-0">
+        <div class="min-w-0 text-center sm:text-left">
           <p
             class="text-brand-900 dark:text-brand-200 text-xs font-semibold tracking-wider"
           >
@@ -97,7 +97,7 @@ const sourceUrl = computed(() => {
           </p>
           <p
             aria-live="polite"
-            class="mt-1 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white"
+            class="mt-1 text-3xl leading-tight font-semibold tracking-tight text-slate-950 tabular-nums sm:text-4xl dark:text-white"
           >
             {{
               formattedRate ??
@@ -135,10 +135,23 @@ const sourceUrl = computed(() => {
           </p>
         </div>
         <span
-          class="border-brand-300 text-brand-900 dark:border-brand-800 dark:text-brand-200 border-t pt-3 text-sm leading-6 font-medium sm:border-t-0 sm:border-l sm:py-2 sm:pt-0 sm:pl-5"
+          class="border-brand-300 text-brand-900 dark:border-brand-800 dark:text-brand-200 flex min-h-11 w-full shrink-0 items-center justify-between gap-3 border-t pt-3 text-sm leading-6 font-medium sm:w-auto sm:border-t-0 sm:border-l sm:py-2 sm:pt-0 sm:pl-5"
         >
-          <span class="block">Ver historial</span>
-          <span class="block">por fecha »</span>
+          <span class="whitespace-nowrap">Ver historial por fecha</span>
+          <svg
+            aria-hidden="true"
+            class="size-4 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M5 12h14m-7-7 7 7-7 7"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </span>
       </NuxtLink>
       <p
