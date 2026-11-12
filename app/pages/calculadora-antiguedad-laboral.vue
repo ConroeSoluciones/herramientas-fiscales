@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { VueDatePicker } from '@vuepic/vue-datepicker'
+import {
+  VueDatePicker,
+  type InputAttributesConfig,
+} from '@vuepic/vue-datepicker'
 import { es } from 'date-fns/locale'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 type InputMode = 'manual' | 'xml'
+type InvalidDateField = 'start' | 'calculation' | 'both' | null
+type AccessibleDateInputAttributes = Partial<InputAttributesConfig> & {
+  'aria-invalid'?: 'true'
+  'aria-describedby'?: string
+}
 
 interface TenureResult {
   years: number
@@ -154,11 +162,34 @@ const calculationDate = ref(today)
 const colorMode = useColorMode()
 const hasCalculated = ref(false)
 const validationMessage = ref('')
+const invalidDateField = ref<InvalidDateField>(null)
 const xmlMessage = ref('')
 const xmlError = ref('')
 const isReadingXml = ref(false)
 const copiedFormat = ref('')
+const copyError = ref('')
 const xmlInput = ref<HTMLInputElement | null>(null)
+const manualTab = ref<HTMLButtonElement | null>(null)
+const xmlTab = ref<HTMLButtonElement | null>(null)
+let xmlReadGeneration = 0
+let copyGeneration = 0
+let copyTimeout: number | undefined
+
+function dateInputAttributes(
+  id: string,
+  field: Exclude<InvalidDateField, 'both' | null>,
+): AccessibleDateInputAttributes {
+  const isInvalid =
+    invalidDateField.value === field || invalidDateField.value === 'both'
+
+  return {
+    id,
+    required: true,
+    clearable: false,
+    'aria-invalid': isInvalid ? 'true' : undefined,
+    'aria-describedby': isInvalid ? 'validation-message' : undefined,
+  }
+}
 
 const startPickerDate = computed<Date | null>({
   get: () => dateForPicker(startDate.value),
@@ -172,10 +203,17 @@ const calculationPickerDate = computed<Date | null>({
   },
 })
 
-const maxStartPickerDate = computed(
-  () => dateForPicker(calculationDate.value) ?? undefined,
-)
-const maxCalculationPickerDate = dateForPicker(today) ?? undefined
+const todayPickerDate = dateForPicker(today)
+const maxStartPickerDate = computed(() => {
+  const calculationDateValue = dateForPicker(calculationDate.value)
+  if (!calculationDateValue) return todayPickerDate ?? undefined
+  if (!todayPickerDate || calculationDateValue > todayPickerDate) {
+    return todayPickerDate ?? undefined
+  }
+
+  return calculationDateValue
+})
+const maxCalculationPickerDate = todayPickerDate ?? undefined
 const isDarkMode = computed(() => colorMode.value === 'dark')
 
 const tenure = computed(() =>
@@ -230,17 +268,38 @@ const vacationTable = [
 
 function calculate() {
   validationMessage.value = ''
+  invalidDateField.value = null
+  copyError.value = ''
   const start = parseIsoDate(startDate.value)
   const end = parseIsoDate(calculationDate.value)
 
   if (!start) {
     validationMessage.value = 'Ingresa una fecha de inicio válida.'
+    invalidDateField.value = 'start'
     hasCalculated.value = false
     return
   }
 
   if (!end) {
     validationMessage.value = 'Ingresa una fecha de cálculo válida.'
+    invalidDateField.value = 'calculation'
+    hasCalculated.value = false
+    return
+  }
+
+  const latestDate = parseIsoDate(today)
+  if (latestDate && end > latestDate) {
+    validationMessage.value =
+      'La fecha de cálculo no puede ser posterior al día de hoy.'
+    invalidDateField.value = 'calculation'
+    hasCalculated.value = false
+    return
+  }
+
+  if (latestDate && start > latestDate) {
+    validationMessage.value =
+      'La fecha de inicio no puede ser posterior al día de hoy.'
+    invalidDateField.value = 'start'
     hasCalculated.value = false
     return
   }
@@ -248,6 +307,7 @@ function calculate() {
   if (start > end) {
     validationMessage.value =
       'La fecha de inicio no puede ser posterior a la fecha de cálculo.'
+    invalidDateField.value = 'both'
     hasCalculated.value = false
     return
   }
@@ -256,12 +316,20 @@ function calculate() {
 }
 
 function resetCalculator() {
+  xmlReadGeneration += 1
+  copyGeneration += 1
+  isReadingXml.value = false
   startDate.value = ''
   calculationDate.value = today
   hasCalculated.value = false
   validationMessage.value = ''
+  invalidDateField.value = null
   xmlMessage.value = ''
   xmlError.value = ''
+  copyError.value = ''
+  copiedFormat.value = ''
+  if (copyTimeout) window.clearTimeout(copyTimeout)
+  copyTimeout = undefined
   if (xmlInput.value) xmlInput.value.value = ''
 }
 
@@ -269,15 +337,19 @@ function updateDate(value: string) {
   startDate.value = value
   hasCalculated.value = false
   validationMessage.value = ''
+  invalidDateField.value = null
   xmlError.value = ''
 }
 
 async function readPayrollXml(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
+  const generation = ++xmlReadGeneration
   xmlError.value = ''
   xmlMessage.value = ''
   hasCalculated.value = false
+  isReadingXml.value = false
+  input.value = ''
   if (!file) return
 
   if (!file.name.toLowerCase().endsWith('.xml')) {
@@ -288,15 +360,21 @@ async function readPayrollXml(event: Event) {
 
   if (file.size > 5 * 1024 * 1024) {
     xmlError.value = 'El archivo no debe superar los 5 MB.'
-    input.value = ''
+    return
+  }
+
+  if (file.size === 0) {
+    xmlError.value = 'El archivo está vacío.'
     return
   }
 
   isReadingXml.value = true
   try {
     const xmlText = await file.text()
+    if (generation !== xmlReadGeneration) return
+
     const document = new DOMParser().parseFromString(xmlText, 'application/xml')
-    if (document.getElementsByTagName('parsererror').length > 0) {
+    if (document.querySelector('parsererror')) {
       throw new Error(
         'No se pudo leer el XML. Verifica que el archivo esté completo.',
       )
@@ -319,31 +397,75 @@ async function readPayrollXml(event: Event) {
     updateDate(isoDate)
     xmlMessage.value = `Fecha de ingreso detectada en ${file.name}.`
   } catch (error) {
-    xmlError.value =
-      error instanceof Error
-        ? error.message
-        : 'No fue posible leer el XML de nómina.'
+    if (generation === xmlReadGeneration) {
+      xmlError.value =
+        error instanceof Error
+          ? error.message
+          : 'No fue posible leer el XML de nómina.'
+    }
   } finally {
-    isReadingXml.value = false
+    if (generation === xmlReadGeneration) isReadingXml.value = false
   }
 }
 
 async function copyFormat(label: string, value: string) {
+  const generation = ++copyGeneration
+  copyError.value = ''
+  copiedFormat.value = ''
+  if (copyTimeout) window.clearTimeout(copyTimeout)
+  copyTimeout = undefined
+
   try {
     await navigator.clipboard.writeText(value)
+    if (generation !== copyGeneration) return
+
     copiedFormat.value = label
-    window.setTimeout(() => {
-      if (copiedFormat.value === label) copiedFormat.value = ''
+    copyTimeout = window.setTimeout(() => {
+      copiedFormat.value = ''
+      copyTimeout = undefined
     }, 2200)
   } catch {
+    if (generation !== copyGeneration) return
+
     copiedFormat.value = ''
-    validationMessage.value =
+    copyError.value =
       'No fue posible copiar. Selecciona y copia el formato manualmente.'
   }
 }
 
+function handleTabKeydown(event: KeyboardEvent) {
+  let nextMode: InputMode | null = null
+
+  if (event.key === 'ArrowRight') {
+    nextMode = inputMode.value === 'manual' ? 'xml' : 'manual'
+  } else if (event.key === 'ArrowLeft') {
+    nextMode = inputMode.value === 'manual' ? 'xml' : 'manual'
+  } else if (event.key === 'Home') {
+    nextMode = 'manual'
+  } else if (event.key === 'End') {
+    nextMode = 'xml'
+  }
+
+  if (!nextMode) return
+
+  event.preventDefault()
+  inputMode.value = nextMode
+  nextTick(() => {
+    const nextTab = nextMode === 'manual' ? manualTab.value : xmlTab.value
+    nextTab?.focus()
+  })
+}
+
+onBeforeUnmount(() => {
+  xmlReadGeneration += 1
+  copyGeneration += 1
+  if (copyTimeout) window.clearTimeout(copyTimeout)
+})
+
 watch([startDate, calculationDate], () => {
   hasCalculated.value = false
+  validationMessage.value = ''
+  invalidDateField.value = null
 })
 </script>
 
@@ -380,9 +502,11 @@ watch([startDate, calculationDate], () => {
         >
           <button
             id="manual-tab"
+            ref="manualTab"
             type="button"
             role="tab"
             :aria-selected="inputMode === 'manual'"
+            :tabindex="inputMode === 'manual' ? 0 : -1"
             aria-controls="manual-panel"
             class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 rounded-lg px-2 py-3 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 sm:text-base"
             :class="
@@ -391,15 +515,18 @@ watch([startDate, calculationDate], () => {
                 : 'text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white'
             "
             @click="inputMode = 'manual'"
+            @keydown="handleTabKeydown"
           >
             <span aria-hidden="true">▦</span>
             Ingresar fecha manual
           </button>
           <button
             id="xml-tab"
+            ref="xmlTab"
             type="button"
             role="tab"
             :aria-selected="inputMode === 'xml'"
+            :tabindex="inputMode === 'xml' ? 0 : -1"
             aria-controls="xml-panel"
             class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 rounded-lg px-2 py-3 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 sm:text-base"
             :class="
@@ -408,6 +535,7 @@ watch([startDate, calculationDate], () => {
                 : 'text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white'
             "
             @click="inputMode = 'xml'"
+            @keydown="handleTabKeydown"
           >
             <span aria-hidden="true">▤</span>
             Desde XML de nómina
@@ -459,11 +587,7 @@ watch([startDate, calculationDate], () => {
                 :text-input="{ format: 'dd/MM/yyyy' }"
                 placeholder="dd/mm/aaaa"
                 :max-date="maxStartPickerDate"
-                :input-attrs="{
-                  id: 'fecha-ingreso',
-                  required: true,
-                  clearable: false,
-                }"
+                :input-attrs="dateInputAttributes('fecha-ingreso', 'start')"
                 :enable-time-picker="false"
                 :auto-apply="true"
                 :hide-offset-dates="true"
@@ -491,11 +615,9 @@ watch([startDate, calculationDate], () => {
                 :text-input="{ format: 'dd/MM/yyyy' }"
                 placeholder="dd/mm/aaaa"
                 :max-date="maxCalculationPickerDate"
-                :input-attrs="{
-                  id: 'fecha-calculo',
-                  required: true,
-                  clearable: false,
-                }"
+                :input-attrs="
+                  dateInputAttributes('fecha-calculo', 'calculation')
+                "
                 :enable-time-picker="false"
                 :auto-apply="true"
                 :hide-offset-dates="true"
@@ -523,6 +645,7 @@ watch([startDate, calculationDate], () => {
           id="xml-panel"
           role="tabpanel"
           aria-labelledby="xml-tab"
+          :aria-busy="isReadingXml"
           class="mt-6 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-950"
         >
           <h3 class="font-semibold text-slate-950 dark:text-white">
@@ -537,7 +660,8 @@ watch([startDate, calculationDate], () => {
             type="file"
             accept=".xml,text/xml,application/xml"
             class="sr-only"
-            aria-label="Seleccionar XML de nómina"
+            aria-hidden="true"
+            tabindex="-1"
             @change="readPayrollXml"
           />
           <button
@@ -551,7 +675,7 @@ watch([startDate, calculationDate], () => {
           <p
             v-if="xmlMessage"
             role="status"
-            class="mt-3 text-sm font-medium text-emerald-800 dark:text-emerald-300"
+            class="mt-3 text-sm font-medium break-words text-emerald-800 dark:text-emerald-300"
           >
             {{ xmlMessage }}
           </p>
@@ -566,6 +690,7 @@ watch([startDate, calculationDate], () => {
 
         <p
           v-if="validationMessage"
+          id="validation-message"
           role="alert"
           class="mt-4 text-sm font-medium text-rose-800 dark:text-rose-300"
         >
@@ -706,6 +831,13 @@ watch([startDate, calculationDate], () => {
             class="mt-2 text-right text-xs font-medium text-emerald-800 dark:text-emerald-300"
           >
             Formato de {{ copiedFormat.toLowerCase() }} copiado.
+          </p>
+          <p
+            v-if="copyError"
+            role="alert"
+            class="mt-2 text-right text-xs font-medium text-rose-800 dark:text-rose-300"
+          >
+            {{ copyError }}
           </p>
 
           <div class="mt-4 grid gap-2 sm:grid-cols-3">

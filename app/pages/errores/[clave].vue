@@ -12,6 +12,7 @@ interface CatalogDetailResponse {
 const route = useRoute()
 const { public: publicConfig } = useRuntimeConfig()
 const clave = computed(() => String(route.params.clave ?? ''))
+const visibleErrorCount = ref(50)
 const initialSearchQuery =
   typeof route.query.q === 'string' ? route.query.q.trim() : ''
 const searchInput = ref(initialSearchQuery)
@@ -33,12 +34,17 @@ const {
   data: detail,
   status,
   error,
+  refresh: refreshCatalog,
 } = await useFetch<CatalogDetailResponse>(
   () => `/api/catalogos-error/${encodeURIComponent(clave.value)}`,
   {
     query: computed(() => ({ q: searchQuery.value })),
   },
 )
+
+if (import.meta.server && error.value?.statusCode === 404) {
+  setResponseStatus(404)
+}
 
 const pageTitle = computed(
   () => detail.value?.catalog.nombre ?? 'Matriz de errores del SAT',
@@ -64,7 +70,10 @@ useCanonicalUrl(() => `/errores/${encodeURIComponent(clave.value)}`)
 const groupedErrors = computed(() => {
   const groups = new Map<string, CatalogErrorRecord[]>()
 
-  for (const errorRecord of detail.value?.errors ?? []) {
+  for (const errorRecord of (detail.value?.errors ?? []).slice(
+    0,
+    visibleErrorCount.value,
+  )) {
     const label = errorRecord.elemento.trim() || 'Reglas de validación'
     const group = groups.get(label) ?? []
     group.push(errorRecord)
@@ -73,6 +82,10 @@ const groupedErrors = computed(() => {
 
   return [...groups].map(([label, records]) => ({ label, records }))
 })
+
+const hasMoreErrors = computed(
+  () => (detail.value?.errors.length ?? 0) > visibleErrorCount.value,
+)
 
 const isSearchPending = computed(
   () =>
@@ -91,6 +104,14 @@ function formatUpdatedAt(value: string): string {
     timeZone: 'UTC',
   }).format(date)
 }
+
+function showMoreErrors() {
+  visibleErrorCount.value += 50
+}
+
+watch([clave, searchQuery], () => {
+  visibleErrorCount.value = 50
+})
 </script>
 
 <template>
@@ -185,24 +206,42 @@ function formatUpdatedAt(value: string): string {
         >
           <template v-if="isSearchPending">Buscando…</template>
           <template v-else-if="searchQuery">
-            {{ detail.errors.length.toLocaleString('es-MX') }} resultados de
-            {{ detail.catalog.totalErrores.toLocaleString('es-MX') }} errores
+            Mostrando
+            {{
+              Math.min(visibleErrorCount, detail.errors.length).toLocaleString(
+                'es-MX',
+              )
+            }}
+            de {{ detail.errors.length.toLocaleString('es-MX') }} resultados
           </template>
           <template v-else>
-            {{ detail.catalog.totalErrores.toLocaleString('es-MX') }} errores
+            Mostrando
+            {{
+              Math.min(visibleErrorCount, detail.errors.length).toLocaleString(
+                'es-MX',
+              )
+            }}
+            de {{ detail.catalog.totalErrores.toLocaleString('es-MX') }} errores
           </template>
         </p>
       </form>
     </section>
 
     <section class="mx-auto mt-10 max-w-5xl" aria-label="Resultados de errores">
-      <p
+      <div
         v-if="error"
         role="alert"
         class="rounded-xl border border-rose-200 bg-rose-50 p-5 text-rose-900 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-200"
       >
-        No fue posible cargar los errores. Intenta de nuevo más tarde.
-      </p>
+        <p>No fue posible cargar los errores.</p>
+        <button
+          type="button"
+          class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 mt-3 rounded-lg border border-rose-300 px-3 py-2 text-sm font-semibold hover:bg-rose-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-rose-800 dark:hover:bg-rose-900"
+          @click="refreshCatalog()"
+        >
+          Reintentar
+        </button>
+      </div>
       <p
         v-else-if="!isSearchPending && detail.errors.length === 0"
         class="rounded-xl border border-slate-200 bg-white p-6 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
@@ -216,7 +255,7 @@ function formatUpdatedAt(value: string): string {
           :aria-label="`Errores de ${group.label}`"
         >
           <h2
-            class="mb-3 flex items-center gap-3 text-xl font-bold tracking-tight text-slate-950 dark:text-white"
+            class="mb-3 flex min-w-0 flex-wrap items-center gap-3 text-xl font-bold tracking-tight text-slate-950 dark:text-white"
           >
             Errores de {{ group.label }}
             <span
@@ -236,7 +275,9 @@ function formatUpdatedAt(value: string): string {
                   >
                     {{ record.codigoError }}
                   </span>
-                  <span class="text-sm text-slate-500 dark:text-slate-400">
+                  <span
+                    class="min-w-0 text-sm break-words text-slate-500 dark:text-slate-400"
+                  >
                     <template v-if="record.elemento || record.atributo">
                       {{ record.elemento
                       }}<template v-if="record.atributo">
@@ -247,17 +288,19 @@ function formatUpdatedAt(value: string): string {
                   </span>
                 </div>
                 <h3
-                  class="text-base leading-7 font-semibold text-slate-950 sm:text-lg dark:text-white"
+                  class="text-base leading-7 font-semibold break-words text-slate-950 sm:text-lg dark:text-white"
                 >
                   {{ record.descripcionCodigoError }}
                 </h3>
-                <p class="mt-3 leading-7 text-slate-700 dark:text-slate-300">
+                <p
+                  class="mt-3 leading-7 break-words text-slate-700 dark:text-slate-300"
+                >
                   <strong class="font-semibold">Qué revisa el SAT:</strong>
                   {{ record.validacion }}
                 </p>
                 <p
                   v-if="record.aclaraciones"
-                  class="mt-3 leading-7 text-slate-600 dark:text-slate-400"
+                  class="mt-3 leading-7 break-words text-slate-600 dark:text-slate-400"
                 >
                   <strong class="font-semibold">Aclaraciones:</strong>
                   {{ record.aclaraciones }}
@@ -267,11 +310,49 @@ function formatUpdatedAt(value: string): string {
           </ul>
         </section>
       </div>
+      <button
+        v-if="hasMoreErrors && !error"
+        type="button"
+        class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 mt-8 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-800 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+        @click="showMoreErrors"
+      >
+        Mostrar 50 resultados más
+      </button>
     </section>
   </div>
 
-  <section v-else-if="status === 'pending'" class="mx-auto max-w-5xl py-12">
+  <section
+    v-else-if="status === 'pending'"
+    class="mx-auto max-w-5xl py-12"
+    role="status"
+  >
     <p class="text-slate-600 dark:text-slate-300">Cargando catálogo…</p>
+  </section>
+
+  <section
+    v-else-if="error && error.statusCode !== 404"
+    class="mx-auto max-w-5xl py-12"
+    role="alert"
+  >
+    <h1 class="text-3xl font-bold text-slate-950 sm:text-4xl dark:text-white">
+      No fue posible consultar este catálogo
+    </h1>
+    <p class="mt-3 text-slate-600 dark:text-slate-300">
+      Revisa tu conexión e inténtalo de nuevo.
+    </p>
+    <button
+      type="button"
+      class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 mt-5 rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-800 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+      @click="refreshCatalog()"
+    >
+      Reintentar
+    </button>
+    <NuxtLink
+      to="/errores"
+      class="text-brand-700 focus-visible:outline-brand-700 dark:text-brand-300 dark:focus-visible:outline-brand-300 mt-5 ml-4 inline-flex font-semibold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+    >
+      Volver a los catálogos
+    </NuxtLink>
   </section>
 
   <section v-else class="mx-auto max-w-5xl py-12" role="alert">

@@ -36,6 +36,7 @@ const {
   data: catalogs,
   status: catalogsStatus,
   error: catalogsError,
+  refresh: refreshCatalogs,
 } = await useFetch<ErrorCatalogSummary[]>('/api/catalogos-error', {
   key: 'sat-error-catalogs',
   default: () => [],
@@ -274,17 +275,25 @@ function formatUpdatedAt(value: string): string {
     >
       <p
         v-if="catalogsStatus === 'pending'"
+        role="status"
         class="rounded-xl border border-slate-200 bg-white p-6 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
       >
         Cargando catálogos…
       </p>
-      <p
+      <div
         v-else-if="catalogsError"
         role="alert"
         class="rounded-xl border border-rose-200 bg-rose-50 p-6 text-rose-900 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-200"
       >
-        No fue posible cargar los catálogos. Intenta de nuevo más tarde.
-      </p>
+        <p>No fue posible cargar los catálogos.</p>
+        <button
+          type="button"
+          class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 mt-3 rounded-lg border border-rose-300 px-3 py-2 text-sm font-semibold hover:bg-rose-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-rose-800 dark:hover:bg-rose-900"
+          @click="refreshCatalogs()"
+        >
+          Reintentar
+        </button>
+      </div>
       <p
         v-else-if="catalogs.length === 0"
         class="rounded-xl border border-slate-200 bg-white p-6 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"

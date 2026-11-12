@@ -57,42 +57,43 @@ const formattedPublicationDate = computed(() => {
     timeZone: 'UTC',
   }).format(date)
 })
+
+const sourceUrl = computed(() => {
+  const codNota = exchangeRate.value?.codNota
+  if (typeof codNota !== 'number' || !Number.isSafeInteger(codNota)) return null
+
+  return `https://sidof.segob.gob.mx/notas/${codNota}`
+})
 </script>
 
 <template>
-  <div class="space-y-10 pb-10 sm:space-y-12">
-    <section aria-labelledby="inicio-titulo" class="pt-6 text-center sm:pt-10">
-      <p
-        class="text-brand-800 dark:text-brand-300 mb-5 text-xs font-semibold tracking-[0.24em] sm:text-sm"
-      >
-        HERRAMIENTAS FISCALES <span aria-hidden="true">·</span> MÉXICO
-      </p>
+  <div class="space-y-8 pb-10 sm:space-y-12">
+    <section aria-labelledby="inicio-titulo" class="pt-4 text-center sm:pt-10">
       <h1
         id="inicio-titulo"
-        class="mx-auto max-w-4xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl dark:text-white"
+        class="mx-auto max-w-4xl text-3xl leading-tight font-semibold tracking-tight text-balance text-slate-950 sm:text-5xl sm:leading-[1.1] lg:text-6xl dark:text-white"
       >
         Herramientas fiscales de
         <span class="text-brand-800 dark:text-brand-300">CSFacturación</span>
       </h1>
       <p
-        class="mx-auto mt-5 max-w-3xl text-lg leading-8 text-slate-500 sm:text-xl sm:leading-9 dark:text-slate-300"
+        class="mx-auto mt-4 max-w-3xl text-base leading-7 text-slate-500 sm:mt-5 sm:text-xl sm:leading-9 dark:text-slate-300"
       >
-        Consulta el tipo de cambio oficial y encuentra respuestas a errores de
-        tus comprobantes fiscales.
+        Consulta el tipo de cambio del dólar, busca códigos de error de CFDI y
+        calcula la antigüedad laboral para nómina.
       </p>
     </section>
 
-    <section aria-label="Tipo de cambio para pagos SAT" class="text-center">
+    <section aria-label="Tipo de cambio del dólar" class="text-center">
       <NuxtLink
         to="/tipo-de-cambio-dolar-mxn"
-        :aria-label="`Ver el tipo de cambio publicado el ${formattedPublicationDate ?? 'último disponible'}`"
-        class="border-brand-300 bg-brand-50/70 hover:border-brand-500 focus-visible:outline-brand-700 dark:border-brand-800 dark:bg-brand-950/50 dark:focus-visible:outline-brand-300 mx-auto flex max-w-xl flex-col items-stretch gap-4 rounded-2xl border p-5 text-left shadow-sm transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 sm:flex-row sm:items-center sm:justify-between sm:px-7"
+        class="border-brand-300 bg-brand-50/70 hover:border-brand-500 focus-visible:outline-brand-700 dark:border-brand-800 dark:bg-brand-950/50 dark:focus-visible:outline-brand-300 mx-auto flex max-w-xl flex-col items-stretch gap-4 rounded-2xl border p-4 text-left shadow-sm transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 sm:flex-row sm:items-center sm:justify-between sm:p-5 sm:px-7"
       >
         <div class="min-w-0">
           <p
             class="text-brand-900 dark:text-brand-200 text-xs font-semibold tracking-wider"
           >
-            PARA PAGOS SAT HOY
+            TIPO DE CAMBIO SAT
           </p>
           <p
             aria-live="polite"
@@ -104,130 +105,141 @@ const formattedPublicationDate = computed(() => {
             }}
           </p>
           <p
-            class="text-brand-900 dark:text-brand-200 mt-1 text-xs font-medium tracking-wide"
+            :role="
+              exchangeRateError
+                ? 'alert'
+                : exchangeRateStatus === 'pending'
+                  ? 'status'
+                  : undefined
+            "
+            class="mt-1 text-xs font-medium tracking-wide"
+            :class="
+              exchangeRateError
+                ? 'text-rose-800 dark:text-rose-300'
+                : 'text-brand-900 dark:text-brand-200'
+            "
           >
             <template v-if="formattedPublicationDate">
-              TIPO DE CAMBIO EN VIVO · {{ formattedPublicationDate }}
+              PUBLICADO EL {{ formattedPublicationDate }}
+            </template>
+            <template v-else-if="exchangeRateStatus === 'pending'">
+              CONSULTANDO EL TIPO DE CAMBIO…
             </template>
             <template v-else-if="exchangeRateError">
-              TIPO DE CAMBIO TEMPORALMENTE NO DISPONIBLE
+              NO SE PUDO CONSULTAR. REVISA EL HISTORIAL.
             </template>
-            <template v-else>
-              ESPERANDO REGISTROS EN LA BASE DE DATOS
+            <template v-else-if="formattedRate">
+              FECHA DE PUBLICACIÓN NO DISPONIBLE.
             </template>
+            <template v-else> SIN REGISTROS DISPONIBLES. </template>
           </p>
         </div>
         <span
           class="border-brand-300 text-brand-900 dark:border-brand-800 dark:text-brand-200 border-t pt-3 text-sm leading-6 font-medium sm:border-t-0 sm:border-l sm:py-2 sm:pt-0 sm:pl-5"
         >
-          <span class="block">Ver FIX, DOF</span>
-          <span class="block">y Para Pagos »</span>
+          <span class="block">Ver historial</span>
+          <span class="block">por fecha »</span>
         </span>
       </NuxtLink>
+      <p
+        v-if="sourceUrl"
+        class="mx-auto mt-2 max-w-xl text-center text-xs leading-5 text-slate-600 dark:text-slate-400"
+      >
+        Fuente:
+        <a
+          :href="sourceUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-brand-800 decoration-brand-300 hover:text-brand-950 dark:text-brand-200 underline underline-offset-2 dark:hover:text-white"
+        >
+          Sistema de Información del Diario Oficial de la Federación (SIDOF),
+          México
+        </a>
+      </p>
     </section>
 
     <section
-      aria-label="Herramientas disponibles"
-      class="mx-auto grid max-w-6xl gap-5 md:grid-cols-2 xl:grid-cols-3"
+      aria-labelledby="mas-herramientas-titulo"
+      class="mx-auto max-w-3xl"
     >
-      <NuxtLink
-        to="/tipo-de-cambio-dolar-mxn"
-        class="group border-brand-300 focus-visible:outline-brand-700 dark:border-brand-800 dark:focus-visible:outline-brand-300 flex min-h-72 flex-col rounded-2xl border bg-white p-7 shadow-md transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:bg-slate-900"
+      <h2
+        id="mas-herramientas-titulo"
+        class="text-xl font-semibold tracking-tight text-slate-950 dark:text-white"
       >
-        <span
-          aria-hidden="true"
-          class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 grid size-14 place-items-center rounded-2xl text-2xl font-semibold"
-        >
-          $
-        </span>
-        <span
-          class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 mt-5 rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
-        >
-          PRIORIDAD · USD/MXN
-        </span>
-        <h2
-          class="group-hover:text-brand-900 dark:group-hover:text-brand-200 mt-5 text-xl font-semibold tracking-tight text-slate-950 dark:text-white"
-        >
-          Tipo de Cambio SAT
-        </h2>
-        <p
-          class="mt-4 flex-1 text-base leading-7 text-slate-500 dark:text-slate-300"
-        >
-          Consulta el tipo de cambio oficial publicado para obligaciones en
-          moneda extranjera.
-        </p>
-        <span
-          class="text-brand-800 dark:text-brand-300 mt-6 text-sm font-semibold"
-        >
-          Ver tipo de cambio <span aria-hidden="true">»</span>
-        </span>
-      </NuxtLink>
-
-      <NuxtLink
-        to="/calculadora-antiguedad-laboral"
-        class="group hover:border-brand-300 focus-visible:outline-brand-700 dark:hover:border-brand-700 dark:focus-visible:outline-brand-300 flex min-h-72 flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-slate-800 dark:bg-slate-900"
+        Más herramientas
+      </h2>
+      <ul
+        class="mt-2 divide-y divide-slate-200 border-y border-slate-200 dark:divide-slate-800 dark:border-slate-800"
       >
-        <span
-          aria-hidden="true"
-          class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 grid size-14 place-items-center rounded-2xl text-2xl font-semibold"
-        >
-          ◷
-        </span>
-        <span
-          class="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 mt-5 rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
-        >
-          NÓMINA · LFT
-        </span>
-        <h2
-          class="group-hover:text-brand-900 dark:group-hover:text-brand-200 mt-5 text-xl font-semibold tracking-tight text-slate-950 dark:text-white"
-        >
-          Calculadora de antigüedad laboral
-        </h2>
-        <p
-          class="mt-4 flex-1 text-base leading-7 text-slate-500 dark:text-slate-300"
-        >
-          Calcula el tiempo laborado y obtén el formato de antigüedad para el
-          CFDI de nómina.
-        </p>
-        <span
-          class="text-brand-800 dark:text-brand-300 mt-6 text-sm font-semibold"
-        >
-          Calcular antigüedad <span aria-hidden="true">»</span>
-        </span>
-      </NuxtLink>
-
-      <NuxtLink
-        to="/errores"
-        class="group hover:border-brand-300 focus-visible:outline-brand-700 dark:hover:border-brand-700 dark:focus-visible:outline-brand-300 flex min-h-72 flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-slate-800 dark:bg-slate-900"
-      >
-        <span
-          aria-hidden="true"
-          class="grid size-14 place-items-center rounded-2xl bg-rose-50 text-2xl text-rose-800 dark:bg-rose-950 dark:text-rose-200"
-        >
-          ⚠
-        </span>
-        <span
-          class="mt-5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold tracking-wide text-slate-700 dark:bg-slate-800 dark:text-slate-200"
-        >
-          CFDI 4.0 · RETENCIONES 2.0
-        </span>
-        <h2
-          class="group-hover:text-brand-900 dark:group-hover:text-brand-200 mt-5 text-xl font-semibold tracking-tight text-slate-950 dark:text-white"
-        >
-          Buscar códigos de error del SAT
-        </h2>
-        <p
-          class="mt-4 flex-1 text-base leading-7 text-slate-500 dark:text-slate-300"
-        >
-          Consulta catálogos oficiales, encuentra un código y revisa el mensaje
-          y la regla que valida.
-        </p>
-        <span
-          class="text-brand-800 dark:text-brand-300 mt-6 text-sm font-semibold"
-        >
-          Explorar catálogos <span aria-hidden="true">»</span>
-        </span>
-      </NuxtLink>
+        <li>
+          <NuxtLink
+            to="/errores"
+            class="group focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 flex min-h-11 items-center justify-between gap-3 rounded-sm py-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:gap-5 sm:py-5"
+          >
+            <div>
+              <h3
+                class="group-hover:text-brand-800 dark:group-hover:text-brand-300 text-lg font-semibold tracking-tight text-slate-950 dark:text-white"
+              >
+                Buscar códigos de error del SAT
+              </h3>
+              <p
+                class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300"
+              >
+                Busca un código en los catálogos del SAT y consulta su mensaje y
+                regla de validación.
+              </p>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="text-brand-800 dark:text-brand-300 size-5 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 12h14m-7-7 7 7-7 7"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </NuxtLink>
+        </li>
+        <li>
+          <NuxtLink
+            to="/calculadora-antiguedad-laboral"
+            class="group focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 flex min-h-11 items-center justify-between gap-3 rounded-sm py-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:gap-5 sm:py-5"
+          >
+            <div>
+              <h3
+                class="group-hover:text-brand-800 dark:group-hover:text-brand-300 text-lg font-semibold tracking-tight text-slate-950 dark:text-white"
+              >
+                Calculadora de antigüedad laboral
+              </h3>
+              <p
+                class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300"
+              >
+                Calcula el tiempo laborado y obtén el formato de antigüedad para
+                el CFDI de nómina.
+              </p>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="text-brand-800 dark:text-brand-300 size-5 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 12h14m-7-7 7 7-7 7"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </NuxtLink>
+        </li>
+      </ul>
     </section>
   </div>
 </template>

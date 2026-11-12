@@ -1,6 +1,7 @@
 # Agent instructions
 
 - The repository is a pnpm workspace: the Nuxt 4.6 site uses the `app/` source directory, and the SIDOF scraper is isolated in `packages/sidof-scraper`.
+- For Impeccable UI/design requests, default to the Nuxt frontend in `app/`; for landing-page reviews, use `app/pages/index.vue`. Treat `packages/*` as backend utilities and do not ask the user to choose among them unless they explicitly name a package.
 - Tailwind CSS 4 is integrated with `@tailwindcss/vite`; `@nuxtjs/color-mode` adds persisted light/dark/system preferences, and the `dark:` variant follows the `.dark` class in `app/assets/css/main.css`. Nitro routes remain under root `server/api/`.
 - The home page must feature Tipo de Cambio SAT as its primary card plus the SAT error finder. Its top widget calls `GET /api/tipo-cambio/penultimo`, which returns the second MySQL row by publication date descending. `/tipo-de-cambio-dolar-mxn` includes a calendar and monthly history backed by `GET /api/tipo-cambio/historial?mes=AAAA-MM`.
 - The SAT error finder flows from `/errores` (catalog index) to `/errores/[clave]` (all rows or search). `GET /api/catalogos-error` returns summaries and `GET /api/catalogos-error/:clave?q=...` returns filtered rows. Keep DB access server-only.

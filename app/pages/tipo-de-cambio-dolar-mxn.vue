@@ -70,6 +70,7 @@ const {
   data: history,
   status: historyStatus,
   error: historyError,
+  refresh: refreshHistory,
 } = await useFetch<ExchangeRateRecord[]>('/api/tipo-cambio/historial', {
   key: 'exchange-rate-history',
   query: historyQuery,
@@ -173,6 +174,12 @@ function selectCalendarDate(date: string) {
         class="mt-3 text-xl font-semibold text-slate-500 sm:text-2xl dark:text-slate-300"
       >
         Cargando…
+      </p>
+      <p
+        v-else-if="historyError"
+        class="mt-3 text-xl font-semibold text-slate-600 dark:text-slate-300"
+      >
+        Dato temporalmente no disponible
       </p>
       <p
         v-else
@@ -323,13 +330,20 @@ function selectCalendarDate(date: string) {
         >
           Cargando historial…
         </p>
-        <p
+        <div
           v-else-if="historyError"
           role="alert"
           class="rounded-xl bg-rose-50 p-5 text-sm text-rose-800 dark:bg-rose-950 dark:text-rose-200"
         >
-          No fue posible cargar el historial. Intenta de nuevo más tarde.
-        </p>
+          <p>No fue posible cargar el historial.</p>
+          <button
+            type="button"
+            class="focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 mt-3 rounded-lg border border-rose-300 px-3 py-2 font-semibold hover:bg-rose-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-rose-800 dark:hover:bg-rose-900"
+            @click="refreshHistory()"
+          >
+            Reintentar
+          </button>
+        </div>
         <p
           v-else-if="history.length === 0"
           class="rounded-xl bg-slate-50 p-5 text-sm leading-6 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
