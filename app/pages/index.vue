@@ -186,7 +186,7 @@ const sourceUrl = computed(() => {
       >
         <li>
           <NuxtLink
-            to="/errores"
+            to="/codigos-sat"
             class="group focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 flex min-h-11 items-center justify-between gap-3 rounded-sm py-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:gap-5 sm:py-5"
           >
             <div>

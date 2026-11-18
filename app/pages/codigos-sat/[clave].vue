@@ -65,7 +65,7 @@ useSeoMeta({
   twitterCard: 'summary',
 })
 
-useCanonicalUrl(() => `/errores/${encodeURIComponent(clave.value)}`)
+useCanonicalUrl(() => `/codigos-sat/${encodeURIComponent(clave.value)}`)
 
 const groupedErrors = computed(() => {
   const groups = new Map<string, CatalogErrorRecord[]>()
@@ -122,7 +122,7 @@ watch([clave, searchQuery], () => {
     >
       <div class="mx-auto max-w-5xl">
         <NuxtLink
-          to="/errores"
+          to="/codigos-sat"
           class="text-brand-700 focus-visible:outline-brand-700 dark:text-brand-300 dark:focus-visible:outline-brand-300 mb-8 inline-flex items-center gap-2 font-semibold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           <span aria-hidden="true">←</span>
@@ -348,7 +348,7 @@ watch([clave, searchQuery], () => {
       Reintentar
     </button>
     <NuxtLink
-      to="/errores"
+      to="/codigos-sat"
       class="text-brand-700 focus-visible:outline-brand-700 dark:text-brand-300 dark:focus-visible:outline-brand-300 mt-5 ml-4 inline-flex font-semibold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       Volver a los catálogos
@@ -360,7 +360,7 @@ watch([clave, searchQuery], () => {
       No encontramos este catálogo
     </h1>
     <NuxtLink
-      to="/errores"
+      to="/codigos-sat"
       class="text-brand-700 dark:text-brand-300 mt-4 inline-flex font-semibold hover:underline"
     >
       Volver a los catálogos

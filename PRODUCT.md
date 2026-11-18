@@ -31,7 +31,7 @@ El portal combina herramientas específicas para flujos de trabajo mexicanos —
 ## Capabilities and Constraints
 
 - `/tipo-de-cambio-dolar-mxn` permite consultar el tipo de cambio por fecha en un calendario y revisar el historial mensual.
-- `/errores` lista los catálogos SAT sincronizados; cada catálogo permite buscar por código, mensaje, atributo o validación.
+- `/codigos-sat` lista los catálogos SAT sincronizados; cada catálogo permite buscar por código, mensaje, atributo o validación. Las rutas previas bajo `/errores` redirigen permanentemente a esta sección.
 - `/calculadora-antiguedad-laboral` calcula antigüedad con fecha manual o XML de nómina, genera formatos para el atributo de antigüedad del CFDI y presenta prestaciones de referencia según la LFT.
 - Hay páginas de privacidad y aviso legal.
 - El acceso a MySQL y las credenciales deben permanecer en el servidor; las APIs públicas solo entregan los datos necesarios para las herramientas.

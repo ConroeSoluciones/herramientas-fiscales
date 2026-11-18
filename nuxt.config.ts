@@ -30,6 +30,11 @@ export default defineNuxtConfig({
     defaultLocale: 'es-MX',
   },
 
+  sitemap: {
+    sources: ['/api/__sitemap__/urls'],
+    exclude: ['/aviso-legal', '/privacidad', '/errores', '/errores/**'],
+  },
+
   runtimeConfig: {
     public: { siteName, siteUrl, marketingUrl },
   },
@@ -76,6 +81,15 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/errores': {
+      redirect: { to: '/codigos-sat', statusCode: 301 },
+    },
+    '/errores/': {
+      redirect: { to: '/codigos-sat', statusCode: 301 },
+    },
+    '/errores/**': {
+      redirect: { to: '/codigos-sat/**', statusCode: 301 },
+    },
     // Activar prerenderizado por ruta cuando se defina la estrategia de publicación.
     // '/': { prerender: true },
     // '/tipo-de-cambio-dolar-mxn': { prerender: true },

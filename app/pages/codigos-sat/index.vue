@@ -30,7 +30,7 @@ useSeoMeta({
   twitterCard: 'summary',
 })
 
-useCanonicalUrl('/errores')
+useCanonicalUrl('/codigos-sat')
 
 const {
   data: catalogs,
@@ -247,7 +247,7 @@ function formatUpdatedAt(value: string): string {
               </p>
               <NuxtLink
                 :to="{
-                  path: `/errores/${result.catalogClave}`,
+                  path: `/codigos-sat/${result.catalogClave}`,
                   query: { q: result.codigoError },
                 }"
                 class="text-brand-800 focus-visible:outline-brand-700 dark:text-brand-300 dark:focus-visible:outline-brand-300 mt-3 inline-flex font-semibold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -305,7 +305,7 @@ function formatUpdatedAt(value: string): string {
       <ul v-else class="grid gap-5 md:grid-cols-2">
         <li v-for="catalog in catalogs" :key="catalog.id">
           <NuxtLink
-            :to="`/errores/${catalog.clave}`"
+            :to="`/codigos-sat/${catalog.clave}`"
             class="group hover:border-brand-300 focus-visible:outline-brand-700 dark:hover:border-brand-800 dark:focus-visible:outline-brand-300 block h-full rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-slate-800 dark:bg-slate-900"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">

@@ -53,7 +53,7 @@ WHERE e.codigo_error = ?;
 
 El comando es apto para ejecutarse mensualmente desde cron o el scheduler del servidor, pero el scheduler no se configura dentro de Nuxt ni está provisionado en este repositorio. Cada ejecución descarga y valida todos los Excel antes de actualizar la base; la actualización de los catálogos es transaccional.
 
-La página `/errores` consulta `GET /api/catalogos-error` para mostrar los catálogos presentes en MySQL, su número de errores, rango de códigos y última sincronización. Cada tarjeta abre `/errores/{clave}`, donde se pueden revisar todos los errores o filtrar por código, mensaje, atributo o validación. La API de detalle es `GET /api/catalogos-error/{clave}?q=...` y devuelve únicamente los datos públicos del catálogo.
+La página `/codigos-sat` consulta `GET /api/catalogos-error` para mostrar los catálogos presentes en MySQL, su número de errores, rango de códigos y última sincronización. Cada tarjeta abre `/codigos-sat/{clave}`, donde se pueden revisar todos los errores o filtrar por código, mensaje, atributo o validación. Las antiguas rutas `/errores` redirigen permanentemente a la nueva ruta. La API de detalle es `GET /api/catalogos-error/{clave}?q=...` y devuelve únicamente los datos públicos del catálogo.
 
 El widget superior consulta `GET /api/tipo-cambio/penultimo` y muestra el segundo registro de MySQL ordenado por `fecha_publicacion DESC` (con `cod_nota DESC` como desempate). `/tipo-de-cambio-dolar-mxn` ofrece un calendario y el historial mensual; la API `GET /api/tipo-cambio/historial?mes=AAAA-MM` consulta las fechas de aplicación en MySQL.
 
@@ -85,6 +85,6 @@ Los CTA al sitio corporativo usan `NUXT_PUBLIC_MARKETING_URL` como destino (por 
 - `packages/sidof-ingestion/`: comandos de carga/sincronización y repositorio MySQL.
 - `packages/sat-error-catalogs/`: descarga, análisis de Excel e ingesta mensual de matrices de errores SAT.
 
-Nuxt Sitemap y Robots generan `sitemap.xml` y `robots.txt`. Cada página declara su propio título, descripción y URL canónica. `ThemeSwitcher` permite elegir tema claro, oscuro o del sistema; la preferencia queda guardada en el navegador.
+Nuxt Sitemap genera `sitemap.xml`, incluye las rutas dinámicas de catálogos SAT desde MySQL y omite temporalmente las páginas legales sin terminar. Nuxt Robots genera `robots.txt`. Schema.org identifica el sitio y la organización CSFacturacion con logo, redes sociales y contactos. Cada página declara su propio título, descripción y URL canónica. `ThemeSwitcher` permite elegir tema claro, oscuro o del sistema; la preferencia queda guardada en el navegador.
 
-La portada prioriza el tipo de cambio y ofrece acceso al buscador de códigos. `/errores` lista los catálogos sincronizados; cada catálogo abre su búsqueda de códigos.
+La portada prioriza el tipo de cambio y ofrece acceso al buscador de códigos. `/codigos-sat` lista los catálogos sincronizados; cada catálogo abre su búsqueda de códigos.
