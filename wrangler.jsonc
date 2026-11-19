@@ -1,18 +1,21 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "cs-herramientas",
-	"compatibility_date": "2026-11-18",
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cs-herramientas",
+  "compatibility_date": "2026-11-18",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
-	"observability": {
-		"enabled": true,
-	},
-  "routes": [{ "pattern": "herramientas.csfacturacion.com", "custom_domain": true }],
-	"d1_databases": [
-		{
-			"binding": "cs_herramientas",
-			"database_name": "cs-herramientas",
-			"database_id": "b0cd4939-3f9a-401b-ad61-dccaad56e456"
-		},
-	],
+  "observability": {
+    "enabled": true,
+  },
+  "routes": [
+    { "pattern": "herramientas.csfacturacion.com", "custom_domain": true },
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cs-herramientas",
+      "database_id": "b0cd4939-3f9a-401b-ad61-dccaad56e456",
+      "migrations_dir": "migrations",
+    },
+  ],
 }
