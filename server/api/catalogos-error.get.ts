@@ -1,16 +1,16 @@
 import { getSatCatalogRepository } from '../utils/sat-catalog-repository.js'
 import { getSatCatalogName } from '../utils/sat-catalog-names.js'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
-    const catalogs = await getSatCatalogRepository().listCatalogSummaries()
+    const catalogs = await getSatCatalogRepository(event).listCatalogSummaries()
     return catalogs.map((catalog) => ({
       ...catalog,
       nombre: getSatCatalogName(catalog.clave, catalog.nombre),
     }))
   } catch (error) {
     console.error(
-      'No se pudieron consultar los catálogos de errores SAT en MySQL.',
+      'No se pudieron consultar los catálogos de errores SAT en D1.',
       error instanceof Error ? error.name : 'Error desconocido',
     )
     throw createError({

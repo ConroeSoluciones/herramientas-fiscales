@@ -1,9 +1,11 @@
 import { getSidofTipoCambioRepository } from '../../utils/sidof-tipo-cambio-repository.js'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
     const record =
-      await getSidofTipoCambioRepository().findPenultimateByPublicationDate()
+      await getSidofTipoCambioRepository(
+        event,
+      ).findPenultimateByPublicationDate()
     if (!record) return null
 
     return {
@@ -13,7 +15,7 @@ export default defineEventHandler(async () => {
     }
   } catch (error) {
     console.error(
-      'No se pudo consultar el tipo de cambio penúltimo en MySQL.',
+      'No se pudo consultar el tipo de cambio penúltimo en D1.',
       error instanceof Error ? error.name : 'Error desconocido',
     )
     throw createError({

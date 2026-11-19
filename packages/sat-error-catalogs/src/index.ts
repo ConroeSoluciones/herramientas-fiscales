@@ -1,5 +1,4 @@
-export { createMysqlPoolFromEnvironment } from './mysql-pool.js'
-export { MysqlCatalogRepository } from './mysql-repository.js'
+export { D1CatalogRepository } from './d1-repository.js'
 export type {
   CatalogErrorRecord,
   CatalogErrorSearchResult,

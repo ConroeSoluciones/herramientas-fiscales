@@ -26,15 +26,11 @@ function scrapedItem(note: SidofNotaReference): ScrapedItem {
 }
 
 test('ingestLatest solo consulta e inserta notas cuyo codNota no existe', async () => {
-  let ensuredSchema = false
   let requestedCodes: readonly number[] = []
   let insertedCodes: readonly number[] = []
   const detailRequests: number[] = []
 
   const repository: TipoCambioRepository = {
-    async ensureSchema() {
-      ensuredSchema = true
-    },
     async findExistingCodNotas(codNotas) {
       requestedCodes = codNotas
       return new Set([100])
@@ -63,7 +59,6 @@ test('ingestLatest solo consulta e inserta notas cuyo codNota no existe', async 
     repository,
   )
 
-  assert.equal(ensuredSchema, true)
   assert.deepEqual(requestedCodes, [101, 100])
   assert.deepEqual(detailRequests, [101])
   assert.deepEqual(insertedCodes, [101])
@@ -108,7 +103,6 @@ test('backfill pagina hasta el corte de cinco años e incluye la fecha límite',
       },
     },
     {
-      async ensureSchema() {},
       async findExistingCodNotas() {
         return new Set()
       },
@@ -157,7 +151,6 @@ test('backfill limita la carga a las publicaciones más recientes solicitadas', 
       },
     },
     {
-      async ensureSchema() {},
       async findExistingCodNotas() {
         return new Set()
       },

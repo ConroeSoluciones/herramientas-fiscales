@@ -9,24 +9,29 @@
     "node": ">=22"
   },
   "scripts": {
-    "build:packages": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion build && pnpm --filter @cs-herramientas/sat-error-catalogs build",
+    "build:packages": "pnpm --filter @cs-herramientas/d1-client build && pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion build && pnpm --filter @cs-herramientas/sat-error-catalogs build",
     "build": "pnpm run build:packages && nuxt build",
     "dev": "nuxt dev",
     "postinstall": "pnpm run build:packages && nuxt prepare",
-    "preview": "nuxt preview",
+    "preview": "pnpm run build && wrangler --cwd .output dev",
     "typecheck": "nuxt typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:scraper": "pnpm --filter @cs-herramientas/sidof-scraper test",
+    "test:d1-client": "pnpm --filter @cs-herramientas/d1-client test",
     "db:backfill": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion backfill",
     "db:sync": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion sync",
     "test:ingestion": "pnpm --filter @cs-herramientas/sidof-scraper build && pnpm --filter @cs-herramientas/sidof-ingestion test",
     "sat:catalogos:sync": "pnpm --filter @cs-herramientas/sat-error-catalogs sync",
-    "test:sat-catalogos": "pnpm --filter @cs-herramientas/sat-error-catalogs test"
+    "test:sat-catalogos": "pnpm --filter @cs-herramientas/sat-error-catalogs test",
+    "d1:migrate:local": "wrangler d1 migrations apply cs-herramientas --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply cs-herramientas --remote",
+    "deploy:cloudflare": "pnpm run build && wrangler --cwd .output deploy"
   },
   "dependencies": {
+    "@cs-herramientas/d1-client": "workspace:*",
     "@cs-herramientas/sat-error-catalogs": "workspace:*",
     "@cs-herramientas/sidof-ingestion": "workspace:*",
     "@vuepic/vue-datepicker": "^14.0.0",
@@ -46,6 +51,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "~4.3.5",
     "typescript": "~5.9.3",
-    "vue-tsc": "^3.3.14"
+    "vue-tsc": "^3.3.14",
+    "wrangler": "^4.164.0"
   }
 }

@@ -15,10 +15,9 @@ export default defineEventHandler(async (event) => {
   const endDate = `${month}-${String(lastDay).padStart(2, '0')}`
 
   try {
-    const records = await getSidofTipoCambioRepository().findByRateDateRange(
-      startDate,
-      endDate,
-    )
+    const records = await getSidofTipoCambioRepository(
+      event,
+    ).findByRateDateRange(startDate, endDate)
 
     return records.map((record) => ({
       codNota: record.codNota,
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event) => {
     }))
   } catch (error) {
     console.error(
-      'No se pudo consultar el historial del tipo de cambio en MySQL.',
+      'No se pudo consultar el historial del tipo de cambio en D1.',
       error instanceof Error ? error.name : 'Error desconocido',
     )
     throw createError({

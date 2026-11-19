@@ -2,9 +2,9 @@ import { defineSitemapEventHandler } from '#sitemap/server'
 import type { SitemapUrlInput } from '#sitemap/server'
 import { getSatCatalogRepository } from '../../utils/sat-catalog-repository.js'
 
-export default defineSitemapEventHandler(async () => {
+export default defineSitemapEventHandler(async (event) => {
   try {
-    const catalogs = await getSatCatalogRepository().listCatalogSummaries()
+    const catalogs = await getSatCatalogRepository(event).listCatalogSummaries()
 
     return catalogs.map((catalog) => {
       const lastmod = catalog.actualizadoEn.slice(0, 10)

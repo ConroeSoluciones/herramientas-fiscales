@@ -25,13 +25,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const repository = getSatCatalogRepository()
+  const repository = getSatCatalogRepository(event)
   let catalog
   try {
     catalog = await repository.findCatalogByKey(clave)
   } catch (error) {
     console.error(
-      'No se pudo consultar el catálogo SAT en MySQL.',
+      'No se pudo consultar el catálogo SAT en D1.',
       error instanceof Error ? error.name : 'Error desconocido',
     )
     throw createError({
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     return { catalog, errors }
   } catch (error) {
     console.error(
-      'No se pudieron consultar los errores del catálogo SAT en MySQL.',
+      'No se pudieron consultar los errores del catálogo SAT en D1.',
       error instanceof Error ? error.name : 'Error desconocido',
     )
     throw createError({

@@ -24,7 +24,7 @@ El portal combina herramientas específicas para flujos de trabajo mexicanos —
 
 - El portal vive bajo `https://www.csfacturacion.com` y se presenta en español de México.
 - Los usuarios consultan datos y herramientas en tareas de facturación, CFDI, nómina y administración fiscal.
-- El tipo de cambio se alimenta de registros SIDOF en MySQL. La portada muestra el segundo registro ordenado por fecha de publicación descendente; el historial se consulta por fecha de aplicación y distingue esta de la fecha de publicación.
+- El tipo de cambio se alimenta de registros SIDOF en Cloudflare D1. La portada muestra el segundo registro ordenado por fecha de publicación descendente; el historial se consulta por fecha de aplicación y distingue esta de la fecha de publicación.
 - Los catálogos de errores se obtienen de matrices SAT y sus originales se enlazan desde la interfaz. La carga de SIDOF y la sincronización mensual de catálogos dependen de tareas externas; este repositorio no configura sus schedulers. La vigencia de los datos depende de esas actualizaciones.
 - La calculadora de antigüedad admite una fecha ingresada manualmente o un XML de nómina. La implementación actual lee el XML en el navegador y extrae `FechaInicioRelLaboral` para generar formatos de antigüedad del CFDI.
 
@@ -34,7 +34,7 @@ El portal combina herramientas específicas para flujos de trabajo mexicanos —
 - `/codigos-sat` lista los catálogos SAT sincronizados; cada catálogo permite buscar por código, mensaje, atributo o validación. Las rutas previas bajo `/errores` redirigen permanentemente a esta sección.
 - `/calculadora-antiguedad-laboral` calcula antigüedad con fecha manual o XML de nómina, genera formatos para el atributo de antigüedad del CFDI y presenta prestaciones de referencia según la LFT.
 - Hay páginas de privacidad y aviso legal.
-- El acceso a MySQL y las credenciales deben permanecer en el servidor; las APIs públicas solo entregan los datos necesarios para las herramientas.
+- El acceso a D1 y las credenciales deben permanecer en el servidor; las APIs públicas solo entregan los datos necesarios para las herramientas.
 - Las fuentes oficiales y la fecha de actualización deben mostrarse con precisión. No describir los datos como actuales o en vivo más allá de lo que respalde su fecha de sincronización.
 - La lectura local del XML describe la implementación actual y no debe ampliarse a una garantía general de privacidad sin confirmación.
 

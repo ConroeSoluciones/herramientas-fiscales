@@ -17,7 +17,6 @@ export interface StoredTipoCambio {
 }
 
 export interface TipoCambioRepository {
-  ensureSchema(): Promise<void>
   findExistingCodNotas(
     codNotas: readonly number[],
   ): Promise<ReadonlySet<number>>
@@ -63,8 +62,6 @@ export async function ingestLatest(
   ) {
     throw new RangeError('El límite debe ser un entero positivo.')
   }
-
-  await repository.ensureSchema()
 
   const notes =
     mode === 'backfill'

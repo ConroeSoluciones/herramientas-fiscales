@@ -4,9 +4,9 @@ import {
   SidofNotaDetailSource,
   SidofNotasSource,
 } from '@cs-herramientas/sidof-scraper'
+import { createCloudflareD1DatabaseFromEnvironment } from '@cs-herramientas/d1-client'
 import { ingestLatest } from './ingestion.js'
-import { MysqlTipoCambioRepository } from './mysql-repository.js'
-import { createMysqlPoolFromEnvironment } from './mysql-pool.js'
+import { D1TipoCambioRepository } from './d1-repository.js'
 
 const SIDOF_BACKFILL_PAGE_SIZE = 60
 const SIDOF_SYNC_PAGE_SIZE = 1
@@ -39,30 +39,25 @@ async function main(): Promise<void> {
 
   const limitArgument = commandArguments[1]
   const publicationLimit = parsePublicationLimit(limitArgument)
-  const pool = createMysqlPoolFromEnvironment()
-  try {
-    const summary = await ingestLatest(
-      mode,
-      {
-        notes: new SidofNotasSource(
-          fetch,
-          mode === 'backfill' ? SIDOF_BACKFILL_PAGE_SIZE : SIDOF_SYNC_PAGE_SIZE,
-        ),
-        details: new SidofNotaDetailSource(),
-      },
-      new MysqlTipoCambioRepository(pool),
-      publicationLimit === undefined ? {} : { publicationLimit },
-    )
+  const database = createCloudflareD1DatabaseFromEnvironment(process.env)
+  const summary = await ingestLatest(
+    mode,
+    {
+      notes: new SidofNotasSource(
+        fetch,
+        mode === 'backfill' ? SIDOF_BACKFILL_PAGE_SIZE : SIDOF_SYNC_PAGE_SIZE,
+      ),
+      details: new SidofNotaDetailSource(),
+    },
+    new D1TipoCambioRepository(database),
+    publicationLimit === undefined ? {} : { publicationLimit },
+  )
 
-    const label =
-      mode === 'backfill' ? 'Carga inicial' : 'Sincronización diaria'
-    console.info(
-      `${label}: avisos=${summary.listed}, existentes=${summary.alreadyStored}, ` +
-        `detalles=${summary.detailRequests}, insertados=${summary.inserted}.`,
-    )
-  } finally {
-    await pool.end()
-  }
+  const label = mode === 'backfill' ? 'Carga inicial' : 'Sincronización diaria'
+  console.info(
+    `${label}: avisos=${summary.listed}, existentes=${summary.alreadyStored}, ` +
+      `detalles=${summary.detailRequests}, insertados=${summary.inserted}.`,
+  )
 }
 
 function parsePublicationLimit(value: string | undefined): number | undefined {

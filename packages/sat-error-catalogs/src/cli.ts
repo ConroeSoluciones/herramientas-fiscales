@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { createCloudflareD1DatabaseFromEnvironment } from '@cs-herramientas/d1-client'
 import { readCatalogConfig } from './config.js'
 import { downloadCatalogs } from './downloader.js'
-import { MysqlCatalogRepository } from './mysql-repository.js'
-import { createMysqlPoolFromEnvironment } from './mysql-pool.js'
+import { D1CatalogRepository } from './d1-repository.js'
 
 const rootEnvironmentFile = resolve(process.cwd(), '../../.env')
 if (existsSync(rootEnvironmentFile)) process.loadEnvFile(rootEnvironmentFile)
@@ -29,22 +29,16 @@ async function main(): Promise<void> {
   const configPath = getConfigPath(args)
   const config = await readCatalogConfig(configPath)
 
-  const pool = createMysqlPoolFromEnvironment()
-
-  try {
-    const repository = new MysqlCatalogRepository(pool)
-    await repository.ensureSchema()
-    const catalogs = await downloadCatalogs(config)
-    const importedRows = await repository.replaceCatalogs(catalogs)
-    const summary = catalogs
-      .map((catalog) => `${catalog.source.clave}=${catalog.rows.length}`)
-      .join(', ')
-    console.info(
-      `Catálogos SAT actualizados: ${summary}. Filas reemplazadas: ${importedRows}. Archivos: ${resolve(config.downloadDirectory)}.`,
-    )
-  } finally {
-    await pool.end()
-  }
+  const database = createCloudflareD1DatabaseFromEnvironment(process.env)
+  const repository = new D1CatalogRepository(database)
+  const catalogs = await downloadCatalogs(config)
+  const importedRows = await repository.replaceCatalogs(catalogs)
+  const summary = catalogs
+    .map((catalog) => `${catalog.source.clave}=${catalog.rows.length}`)
+    .join(', ')
+  console.info(
+    `Catálogos SAT actualizados en D1: ${summary}. Filas reemplazadas: ${importedRows}. Archivos: ${resolve(config.downloadDirectory)}.`,
+  )
 }
 
 main().catch((error: unknown) => {

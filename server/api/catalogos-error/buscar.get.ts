@@ -24,7 +24,9 @@ export default defineEventHandler(async (event) => {
 
   try {
     const results =
-      await getSatCatalogRepository().searchErrorsAcrossCatalogs(searchTerm)
+      await getSatCatalogRepository(event).searchErrorsAcrossCatalogs(
+        searchTerm,
+      )
 
     return {
       results: results.slice(0, RESULT_LIMIT).map((result) => ({

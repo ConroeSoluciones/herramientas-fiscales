@@ -6,6 +6,8 @@ const siteName = process.env.NUXT_PUBLIC_SITE_NAME?.trim() || 'CSFacturación'
 const marketingUrl = process.env.NUXT_PUBLIC_MARKETING_URL?.trim() || siteUrl
 
 export default defineNuxtConfig({
+  compatibilityDate: '2026-11-18',
+
   devtools: { enabled: true },
 
   modules: [
@@ -37,6 +39,14 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: { siteName, siteUrl, marketingUrl },
+  },
+
+  nitro: {
+    preset: 'cloudflare_module',
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+    },
   },
 
   app: {
