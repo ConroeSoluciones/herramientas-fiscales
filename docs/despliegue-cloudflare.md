@@ -107,6 +107,7 @@ Esperado: HTTP 200 en las rutas validas, 404 (no 500) en rutas inexistentes y si
 ## Rollback
 
 ```sh
+# ignore this comment
 pnpm exec wrangler versions list cs-herramientas
 pnpm exec wrangler rollback <version-id> cs-herramientas
 ```
