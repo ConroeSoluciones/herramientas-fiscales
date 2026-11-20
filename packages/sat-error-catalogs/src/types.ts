@@ -22,7 +22,7 @@ export interface CatalogErrorRow {
 export interface ParsedCatalog {
   source: CatalogSource
   rows: CatalogErrorRow[]
-  file: Buffer
+  file: Uint8Array
 }
 
 export interface CatalogSummary {

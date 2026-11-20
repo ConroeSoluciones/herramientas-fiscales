@@ -1,15 +1,13 @@
-import { mkdir, rename, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
 import { parseErrorCatalog } from './xls-parser.js'
-import type { CatalogConfig, ParsedCatalog } from './types.js'
+import type { CatalogSource, ParsedCatalog } from './types.js'
 
-export async function downloadCatalogs(
-  config: CatalogConfig,
+export async function fetchCatalogs(
+  sources: readonly CatalogSource[],
   fetcher: typeof fetch = fetch,
 ): Promise<ParsedCatalog[]> {
   const parsedCatalogs: ParsedCatalog[] = []
 
-  for (const source of config.catalogos) {
+  for (const source of sources) {
     const response = await fetcher(source.url, {
       headers: { 'user-agent': 'cs-herramientas-sat-error-catalogs/1.0' },
       signal: AbortSignal.timeout(60_000),
@@ -20,7 +18,7 @@ export async function downloadCatalogs(
       )
     }
 
-    const file = Buffer.from(await response.arrayBuffer())
+    const file = new Uint8Array(await response.arrayBuffer())
     let rows
     try {
       rows = parseErrorCatalog(file)
@@ -35,17 +33,6 @@ export async function downloadCatalogs(
       })
     }
     parsedCatalogs.push({ source, rows, file })
-  }
-
-  await mkdir(config.downloadDirectory, { recursive: true })
-  for (const catalog of parsedCatalogs) {
-    const destination = join(
-      config.downloadDirectory,
-      `${catalog.source.clave}.xls`,
-    )
-    const temporary = `${destination}.tmp-${process.pid}`
-    await writeFile(temporary, catalog.file)
-    await rename(temporary, destination)
   }
 
   return parsedCatalogs

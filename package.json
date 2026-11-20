@@ -36,6 +36,7 @@
     "@cs-herramientas/d1-client": "workspace:*",
     "@cs-herramientas/sat-error-catalogs": "workspace:*",
     "@cs-herramientas/sidof-ingestion": "workspace:*",
+    "@cs-herramientas/sidof-scraper": "workspace:*",
     "@vuepic/vue-datepicker": "^14.0.0",
     "date-fns": "^4.4.0"
   },

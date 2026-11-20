@@ -29,6 +29,23 @@ pnpm sat:catalogos:sync  # carga inicial de catalogos SAT
 
 Si `database_id` queda placeholder (ceros o `PENDIENTE...`), `pnpm cf:check` falla y no se debe desplegar.
 
+## Sincronizacion automatica (Cron Triggers)
+
+El mismo Worker ejecuta dos tareas Nitro (`server/tasks/`) agendadas por Cron Triggers de Cloudflare:
+
+| Cron (UTC)    | Hora CDMX                  | Tarea                | Que hace                               |
+| ------------- | -------------------------- | -------------------- | -------------------------------------- |
+| `20 14 * * *` | 08:20 diario               | `sidof-sync`         | Inserta la ultima publicacion SIDOF    |
+| `30 15 1 * *` | 09:30 el dia 1 de cada mes | `sat-catalogos-sync` | Reemplaza los catalogos de errores SAT |
+
+- Nitro genera el handler `scheduled` del Worker a partir de `nitro.scheduledTasks` (en `nuxt.config.ts`, con `nitro.experimental.tasks: true`); las claves de ese mapa deben coincidir **literalmente** con `triggers.crons` de `wrangler.jsonc` (Nitro compara el cron como cadena exacta).
+- `scripts/check-wrangler-output.mjs` valida que el `wrangler.json` generado conserve los triggers antes de permitir deploy.
+- Prueba local del cron con el Worker construido: `pnpm build && pnpm preview` y luego `curl "http://localhost:8787/__scheduled?cron=20+14+*+*+*"` (dispara la tarea cuyo cron coincide).
+- Disparo manual de una tarea en desarrollo: `pnpm dev` y `curl -X POST http://localhost:3000/_nitro/tasks/sidof-sync` (o `sat-catalogos-sync`).
+- La carga historica (`pnpm db:backfill`, ver seccion Bootstrap de D1) es de **una sola vez** y **no** esta agendada: solo los dos crons de arriba corren periodicamente.
+- Los Cron Triggers no tienen reintentos: si la tarea falla, se pierde esa ejecucion. La ingesta SIDOF es idempotente por `codNota`, asi que la siguiente ejecucion diaria recupera lo perdido.
+- Si el parseo de XLSX de catalogos excede el CPU del Worker, sube `limits.cpu_ms` en `wrangler.jsonc`.
+
 ## Despliegue automatizado (Cloudflare Workers Builds)
 
 Workers Builds esta conectado al repo `ConroeSoluciones/herramientas-fiscales` y despliega en cada push a `main`; tambien permite builds manuales desde el dashboard. Configuracion del proyecto (`cs-herramientas`):

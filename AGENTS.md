@@ -35,7 +35,7 @@
 
 ## Data pipelines
 
-- SIDOF: POST `/busqueda/cargaNotas/` for listing pages, then fetch `/notas/{codNota}` sequentially. Preserve parser tests when upstream responses change; never hardcode browser cookies.
+- SIDOF: POST `/busqueda/cargaNotas/` for listing pages, then fetch `/notas/{codNota}` sequentially. Preserve parser tests when upstream responses change; never hardcode browser cookies. Never invoke `fetch` as an object method inside the Worker (`this.fetch(...)`): workerd throws `Illegal invocation`; the scraper wraps the injected fetch for this reason.
 - SAT catalogs: sources in `config/sat-error-catalogs.json`, downloads to `.data/sat-error-catalogs/` (gitignored). First sheet only, headers on row 2; Nómina omits `ELEMENTO`/`ATRIBUTO` and uses `REGLA DE VALIDACIÓN`/`DESCRIPCIÓN DEL ERROR` while several sheets call the description `ERROR`. Preserve `ACLARACIONES`, skip section rows without a code, and replace each catalog in one D1 batch after every file validates. Display names come from the config through `getSatCatalogName`.
-- The daily SIDOF sync and monthly catalog sync are external schedulers that are not provisioned in this repo; never run a timer inside the Nuxt process.
+- The daily SIDOF sync and monthly catalog sync run as Cloudflare Cron Triggers on the same Worker via Nitro tasks in `server/tasks/`; the `triggers.crons` in `wrangler.jsonc` must match `nitro.scheduledTasks` keys literally. The historical backfill (`pnpm db:backfill`) is manual and must never be scheduled. Custom timers (`setInterval`, etc.) inside the Nuxt process remain forbidden.
 - Keep SEO follow-ups in `docs/seo-pendientes.md` and revisit them in the next SEO-focused PR.

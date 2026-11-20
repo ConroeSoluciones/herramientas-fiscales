@@ -8,6 +8,7 @@ const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const D1_BINDING = 'DB'
 const EXPECTED_ROUTE = 'herramientas.csfacturacion.com'
+const EXPECTED_CRONS = ['20 14 * * *', '30 15 1 * *']
 
 const errors = []
 
@@ -80,6 +81,16 @@ if (d1) {
     `\`database_id\` es placeholder o invalido (${d1.database_id}); crea la base con \`wrangler d1 create\` y fija el UUID real en \`wrangler.jsonc\``,
   )
 }
+
+const crons = config.triggers?.crons
+check(
+  crons !== undefined && crons !== null,
+  'falta `triggers.crons` (Cron Triggers de sincronizacion SIDOF/SAT)',
+)
+check(
+  Array.isArray(crons) && EXPECTED_CRONS.every((cron) => crons.includes(cron)),
+  `\`triggers.crons\` no incluye los crons esperados (${EXPECTED_CRONS.join(', ')})`,
+)
 
 if (errors.length > 0) {
   console.error(

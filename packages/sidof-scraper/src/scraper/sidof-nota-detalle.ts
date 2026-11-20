@@ -43,7 +43,12 @@ export function parseSidofNotaDetalle(
 }
 
 export class SidofNotaDetailSource {
-  constructor(private readonly fetchPage: typeof fetch = fetch) {}
+  private readonly fetchPage: typeof fetch
+
+  constructor(fetchPage: typeof fetch = fetch) {
+    // Mismo motivo que en `SidofNotasSource`: evitar invocar `fetch` como método.
+    this.fetchPage = (input, init) => fetchPage(input, init)
+  }
 
   async scrape(note: SidofNotaReference): Promise<ScrapedItem> {
     const noteUrl = `${SIDOF_ORIGIN}/notas/${note.codNota}`

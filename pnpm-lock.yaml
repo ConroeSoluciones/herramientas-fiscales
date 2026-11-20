@@ -175,6 +175,9 @@ importers:
       '@cs-herramientas/sidof-ingestion':
         specifier: workspace:*
         version: link:packages/sidof-ingestion
+      '@cs-herramientas/sidof-scraper':
+        specifier: workspace:*
+        version: link:packages/sidof-scraper
       '@vuepic/vue-datepicker':
         specifier: ^14.0.0
         version: 14.0.0(vue@3.5.45(typescript@5.9.3))
