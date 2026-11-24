@@ -28,12 +28,15 @@
     "test:sat-catalogos": "pnpm --filter @cs-herramientas/sat-error-catalogs test",
     "d1:migrate:local": "wrangler d1 migrations apply cs-herramientas --local",
     "d1:migrate:remote": "wrangler d1 migrations apply cs-herramientas --remote",
+    "cf:check": "node scripts/check-wrangler-output.mjs",
+    "deploy:dry-run": "wrangler --cwd .output deploy --dry-run --outdir .output/deploy-dry-run",
     "deploy:cloudflare": "pnpm run build && wrangler --cwd .output deploy"
   },
   "dependencies": {
     "@cs-herramientas/d1-client": "workspace:*",
     "@cs-herramientas/sat-error-catalogs": "workspace:*",
     "@cs-herramientas/sidof-ingestion": "workspace:*",
+    "@cs-herramientas/sidof-scraper": "workspace:*",
     "@vuepic/vue-datepicker": "^14.0.0",
     "date-fns": "^4.4.0",
     "saxes": "6.0.0",

@@ -1,6 +1,4 @@
-import { readFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
-import type { CatalogConfig, CatalogSource } from './types.js'
+import type { CatalogSource } from './types.js'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -34,31 +32,16 @@ function parseSource(value: unknown, index: number): CatalogSource {
   return { clave, nombre: nombre.trim(), url: parsedUrl.toString() }
 }
 
-export async function readCatalogConfig(
-  configPath: string,
-): Promise<CatalogConfig> {
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(await readFile(configPath, 'utf8'))
-  } catch (error) {
-    throw new Error(`No se pudo leer la configuración ${configPath}.`, {
-      cause: error,
-    })
-  }
-
-  if (!isRecord(parsed))
+export function parseCatalogSources(value: unknown): CatalogSource[] {
+  if (!isRecord(value))
     throw new Error('La configuración debe ser un objeto JSON.')
-  const sources = parsed.catalogos
+  const sources = value.catalogos
   if (!Array.isArray(sources) || sources.length === 0) {
     throw new Error('La configuración debe incluir al menos un catálogo.')
   }
-  if (
-    typeof parsed.downloadDirectory !== 'string' ||
-    !parsed.downloadDirectory.trim()
-  ) {
-    throw new Error('La configuración debe incluir downloadDirectory.')
-  }
 
+  // Se ignoran claves extra del JSON (p. ej. downloadDirectory) porque el
+  // Worker importa la configuración sin usarlas.
   const catalogos = sources.map(parseSource)
   const keys = new Set<string>()
   for (const source of catalogos) {
@@ -70,11 +53,5 @@ export async function readCatalogConfig(
     keys.add(source.clave)
   }
 
-  return {
-    downloadDirectory: resolve(
-      dirname(resolve(configPath)),
-      parsed.downloadDirectory,
-    ),
-    catalogos,
-  }
+  return catalogos
 }

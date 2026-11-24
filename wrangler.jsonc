@@ -2,14 +2,23 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cs-herramientas",
   "compatibility_date": "2026-11-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  // Cron Triggers en UTC: 14:20 UTC = 08:20 CDMX (sync diario SIDOF); 15:30 UTC dia 1 = 09:30 CDMX (catalogos SAT).
+  "triggers": {
+    "crons": ["20 14 * * *", "30 15 1 * *"],
+  },
   "observability": {
     "enabled": true,
   },
+  "routes": [
+    { "pattern": "herramientas.csfacturacion.com", "custom_domain": true },
+  ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "cs-herramientas",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "b0cd4939-3f9a-401b-ad61-dccaad56e456",
       "migrations_dir": "migrations",
     },
   ],

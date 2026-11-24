@@ -40,8 +40,8 @@ function cellText(value: unknown): string {
   return String(value ?? '').trim()
 }
 
-export function parseErrorCatalog(file: Buffer): CatalogErrorRow[] {
-  const workbook = XLSX.read(file, { type: 'buffer' })
+export function parseErrorCatalog(file: Uint8Array): CatalogErrorRow[] {
+  const workbook = XLSX.read(file, { type: 'array' })
   const firstSheetName = workbook.SheetNames[0]
   if (!firstSheetName) throw new Error('El archivo Excel no contiene hojas.')
 

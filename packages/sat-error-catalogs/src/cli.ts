@@ -2,8 +2,9 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createCloudflareD1DatabaseFromEnvironment } from '@cs-herramientas/d1-client'
-import { readCatalogConfig } from './config.js'
-import { downloadCatalogs } from './downloader.js'
+import { readCatalogConfig } from './config-file.js'
+import { fetchCatalogs } from './downloader.js'
+import { persistCatalogs } from './catalog-store.js'
 import { D1CatalogRepository } from './d1-repository.js'
 
 const rootEnvironmentFile = resolve(process.cwd(), '../../.env')
@@ -31,7 +32,8 @@ async function main(): Promise<void> {
 
   const database = createCloudflareD1DatabaseFromEnvironment(process.env)
   const repository = new D1CatalogRepository(database)
-  const catalogs = await downloadCatalogs(config)
+  const catalogs = await fetchCatalogs(config.catalogos)
+  await persistCatalogs(catalogs, config.downloadDirectory)
   const importedRows = await repository.replaceCatalogs(catalogs)
   const summary = catalogs
     .map((catalog) => `${catalog.source.clave}=${catalog.rows.length}`)

@@ -33,11 +33,8 @@ El nombre y la URL del sitio se configuran en `.env`. Los comandos de ingesta ej
    pnpm d1:migrate:remote
    ```
 
-4. Para probar el Worker con D1 local, usa `pnpm d1:migrate:local` y luego `pnpm preview`. Para publicar en Workers:
-
-   ```sh
-   pnpm deploy:cloudflare
-   ```
+4. Para probar el Worker con D1 local, usa `pnpm d1:migrate:local` y luego `pnpm preview`. Para verificar la config de despliegue sin publicar: `pnpm build && pnpm cf:check && pnpm deploy:dry-run`.
+5. Para publicar, el despliegue automatizado corre en Cloudflare Workers Builds en cada push a `main` (aplica migraciones D1 remotas antes del deploy). Consulta el runbook en [`docs/despliegue-cloudflare.md`](docs/despliegue-cloudflare.md) para la configuracion del pipeline, variables de build, despliegue manual de emergencia (`pnpm deploy:cloudflare`), verificacion post-deploy y rollback.
 
 La migración inicial está en `migrations/0001_initial_schema.sql`. Para cambios futuros, agrega una nueva migración; no se modifica el esquema en cada petición del sitio. En Cloudflare, las APIs leen el binding D1 `DB`. `pnpm dev` y `pnpm preview` usan el D1 local de Wrangler; los comandos de ingesta escriben en el D1 remoto mediante la API de Cloudflare.
 

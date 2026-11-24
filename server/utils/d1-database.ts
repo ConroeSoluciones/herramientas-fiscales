@@ -22,3 +22,8 @@ export function getD1Database(event: H3Event): D1Database {
   // Enables node-based Nuxt development and the ingestion CLIs.
   return createCloudflareD1DatabaseFromEnvironment(process.env)
 }
+
+// Resuelve D1 para contexto sin H3 event (tareas Nitro en el Worker, CLI en Node).
+export function getD1DatabaseFromEnv(env?: { DB?: D1Database }): D1Database {
+  return env?.DB ?? createCloudflareD1DatabaseFromEnvironment(process.env)
+}

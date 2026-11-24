@@ -47,6 +47,14 @@ export default defineNuxtConfig({
       deployConfig: true,
       nodeCompat: true,
     },
+    experimental: {
+      tasks: true,
+    },
+    // Las claves deben coincidir literalmente con `triggers.crons` de wrangler.jsonc.
+    scheduledTasks: {
+      '20 14 * * *': ['sidof-sync'],
+      '30 15 1 * *': ['sat-catalogos-sync'],
+    },
   },
 
   app: {

@@ -45,10 +45,17 @@ export function parseSidofNotasResponse(
 }
 
 export class SidofNotasSource {
+  private readonly fetchRequest: typeof fetch
+  private readonly pageSize: number
+
   constructor(
-    private readonly fetchRequest: typeof fetch = fetch,
-    private readonly pageSize = DEFAULT_SIDOF_PAGE_SIZE,
+    fetchRequest: typeof fetch = fetch,
+    pageSize = DEFAULT_SIDOF_PAGE_SIZE,
   ) {
+    // workerd lanza "Illegal invocation" si `fetch` se invoca como método
+    // (`this.fetchRequest(...)`); se envuelve para que `this` quede indefinido.
+    this.fetchRequest = (input, init) => fetchRequest(input, init)
+    this.pageSize = pageSize
     if (!Number.isSafeInteger(pageSize) || pageSize < 1) {
       throw new RangeError('El tamaño de página debe ser un entero positivo.')
     }
