@@ -10,10 +10,10 @@ const { public: publicConfig } = useRuntimeConfig()
 useSeoMeta({
   title: 'Herramientas fiscales',
   description:
-    'Herramientas fiscales de CSFacturación: consulta el tipo de cambio publicado por SIDOF y busca códigos de error de CFDI.',
+    'Herramientas fiscales de CSFacturación: consulta el tipo de cambio, valida la estructura de un CFDI XML y busca códigos de error.',
   ogTitle: `Herramientas fiscales | ${publicConfig.siteName}`,
   ogDescription:
-    'Tipo de cambio oficial y buscador de códigos de error del SAT.',
+    'Consulta herramientas de tipo de cambio, validación estructural CFDI y búsqueda de códigos de error.',
   ogType: 'website',
   twitterCard: 'summary',
 })
@@ -234,6 +234,40 @@ const sourceUrl = computed(() => {
               >
                 Calcula el tiempo laborado y obtén el formato de antigüedad para
                 el CFDI de nómina.
+              </p>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="text-brand-800 dark:text-brand-300 size-5 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 12h14m-7-7 7 7-7 7"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </NuxtLink>
+        </li>
+        <li>
+          <NuxtLink
+            to="/validar-cfdi-xml"
+            class="group focus-visible:outline-brand-700 dark:focus-visible:outline-brand-300 flex min-h-11 items-center justify-between gap-3 rounded-sm py-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:gap-5 sm:py-5"
+          >
+            <div>
+              <h3
+                class="group-hover:text-brand-800 dark:group-hover:text-brand-300 text-lg font-semibold tracking-tight text-slate-950 dark:text-white"
+              >
+                Validar estructura de CFDI XML
+              </h3>
+              <p
+                class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300"
+              >
+                Revisa la estructura del CFDI 4.0 y sus complementos contra los
+                esquemas XSD.
               </p>
             </div>
             <svg

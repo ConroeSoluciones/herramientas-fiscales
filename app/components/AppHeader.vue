@@ -18,6 +18,7 @@ const navigation = [
   { label: 'Inicio', to: '/' },
   { label: 'Tipo de cambio', to: '/tipo-de-cambio-dolar-mxn' },
   { label: 'Antigüedad laboral', to: '/calculadora-antiguedad-laboral' },
+  { label: 'Validar CFDI', to: '/validar-cfdi-xml' },
   { label: 'Códigos de error SAT', to: '/codigos-sat' },
 ]
 </script>
